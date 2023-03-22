@@ -6,19 +6,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - mongo-version: 3.6
-            scala-version: 2.12.15
-          - mongo-version: 3.6
-            scala-version: 2.13.7
-            # 4.0 must be quoted, otherwise will be truncated to 4
-          - mongo-version: "4.0"
-            scala-version: 2.12.15
-          - mongo-version: "4.0"
-            scala-version: 2.13.7
-          - mongo-version: 4.2
-            scala-version: 2.12.15
-          - mongo-version: 4.2
-            scala-version: 2.13.7
+          - mongo-version: 4.4
+            scala-version: 2.12.17
+          - mongo-version: 4.4
+            scala-version: 2.13.10
+          - mongo-version: "5.0" # 5.0 must be quoted, otherwise will be truncated to 5
+            scala-version: 2.12.17
+          - mongo-version: "5.0"
+            scala-version: 2.13.10
+          - mongo-version: "6.0"
+            scala-version: 2.12.17
+          - mongo-version: "6.0"
+            scala-version: 2.13.10
     env:
       MONGODB_AUTH_PORT: 28117
       MONGODB_NOAUTH_PORT: 27117
@@ -39,9 +38,13 @@ jobs:
     - name: Start mongod
       run: |
         echo Starting mongod version ${{matrix.mongo-version}}
-        sudo docker pull scullxbones/mongodb:${{matrix.mongo-version}}
-        sudo docker run -d -p $MONGODB_NOAUTH_PORT:27017 scullxbones/mongodb:${{matrix.mongo-version}} --noauth $MONGODB_OPTS
-        sudo docker run -d -p $MONGODB_AUTH_PORT:27017 scullxbones/mongodb:${{matrix.mongo-version}} --auth $MONGODB_OPTS
+        sudo docker pull docker.io/mongo:${{matrix.mongo-version}}
+        sudo docker run -d -p $MONGODB_NOAUTH_PORT:27017 \
+          docker.io/mongo:${{matrix.mongo-version}} $MONGODB_OPTS
+        sudo docker run -d -p $MONGODB_AUTH_PORT:27017 \
+          -e MONGO_INITDB_ROOT_USERNAME=admin \
+          -e MONGO_INITDB_ROOT_PASSWORD=password \
+          docker.io/mongo:${{matrix.mongo-version}} $MONGODB_OPTS
         sudo docker ps -a
     - name: Setup authentication
       run: |

@@ -1,5 +1,0 @@
-package akka.contrib.persistence.mongodb
-
-class ScalaDriverJournal1kSpec extends Journal1kSpec(classOf[ScalaDriverPersistenceExtension],"officialScalaJournal1k")
-
-class ScalaDriverSuffixJournal1kSpec extends Journal1kSpec(classOf[ScalaDriverPersistenceExtension], "officialScalaSuffixJournal1k", SuffixCollectionNamesTest.extendedConfig)

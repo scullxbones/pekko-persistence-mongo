@@ -9,7 +9,7 @@
         <Root level="WARN">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="akka.contrib.persistence.mongodb" level="INFO">
+        <Logger name="pekko.contrib.persistence.mongodb" level="INFO">
             <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>

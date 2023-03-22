@@ -2,11 +2,8 @@ publishMavenStyle := true
 
 licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
-import xerial.sbt.Sonatype._
-sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "akka-persistence-mongo", "scullduggery@gmail.com"))
-
 pomExtra in Global := {
-  <url>https://github.com/scullxbones/akka-persistence-mongo</url>
+  <url>https://github.com/scullxbones/pekko-persistence-mongo</url>
     <licenses>
       <license>
         <name>Apache 2</name>
@@ -14,15 +11,20 @@ pomExtra in Global := {
       </license>
     </licenses>
     <scm>
-      <connection>scm:git:github.com/scullxbones/akka-persistence-mongo.git</connection>
-      <developerConnection>scm:git:git@github.com:scullxbones/akka-persistence-mongo.git</developerConnection>
-      <url>github.com/scullxbones/akka-persistence-mongo.git</url>
+      <connection>scm:git:github.com/scullxbones/pekko-persistence-mongo.git</connection>
+      <developerConnection>scm:git:git@github.com:scullxbones/pekko-persistence-mongo.git</developerConnection>
+      <url>github.com/scullxbones/pekko-persistence-mongo.git</url>
     </scm>
     <developers>
       <developer>
         <id>scullxbones</id>
         <name>Brian Scully</name>
         <url>https://github.com/scullxbones/</url>
+      </developer>
+      <developer>
+        <id>thjaeckle</id>
+        <name>Thomas Jäckle</name>
+        <url>https://github.com/thjaeckle/</url>
       </developer>
     </developers>
 }
