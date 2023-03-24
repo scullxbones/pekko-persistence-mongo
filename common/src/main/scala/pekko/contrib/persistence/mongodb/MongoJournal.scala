@@ -6,6 +6,7 @@ import org.apache.pekko.actor.Actor
 import org.apache.pekko.persistence.journal.AsyncWriteJournal
 import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
 
+import scala.collection.immutable
 import scala.concurrent.Future
 import scala.util.Try
 
@@ -56,7 +57,7 @@ class MongoJournal(config: Config) extends AsyncWriteJournal {
    * Note that it is possible to reduce number of allocations by
    * caching some result `Seq` for the happy path, i.e. when no messages are rejected.
    */
-  override def asyncWriteMessages(messages: Seq[AtomicWrite]): Future[Seq[Try[Unit]]] =
+  override def asyncWriteMessages(messages: immutable.Seq[AtomicWrite]): Future[Seq[Try[Unit]]] =
     impl.batchAppend(messages)
 
   /**
