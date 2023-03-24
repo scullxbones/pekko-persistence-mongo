@@ -20,6 +20,7 @@ import org.mongodb.scala.model.{Accumulators, BulkWriteOptions, InsertOneModel, 
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
+import scala.collection.immutable
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -71,12 +72,12 @@ class ScalaDriverPersistenceJournaller(val driver: ScalaMongoDriver) extends Mon
     source.via(flow)
   }
 
-  private[this] def buildBatch(writes: Seq[AtomicWrite]): Seq[Try[BsonDocument]] =
+  private[this] def buildBatch(writes: immutable.Seq[AtomicWrite]): immutable.Seq[Try[BsonDocument]] =
     writes.map(aw => Try(driver.serializeJournal(Atom[BsonValue](aw, driver.useLegacySerialization))))
 
-  private[this] def doBatchAppend(batch: Seq[Try[BsonDocument]], collection: Future[driver.C]): Future[Seq[Try[BsonDocument]]] = {
+  private[this] def doBatchAppend(batch: immutable.Seq[Try[BsonDocument]], collection: Future[driver.C]): Future[immutable.Seq[Try[BsonDocument]]] = {
     if (batch.forall(_.isSuccess)) {
-      val collected: Seq[InsertOneModel[driver.D]] = batch.collect { case Success(doc) => InsertOneModel(doc) }
+      val collected: immutable.Seq[InsertOneModel[driver.D]] = batch.collect { case Success(doc) => InsertOneModel(doc) }
       collection.flatMap(_.withWriteConcern(writeConcern).bulkWrite(collected, new BulkWriteOptions().ordered(true))
         .toFuture()
         .map(_ => batch))
@@ -90,7 +91,7 @@ class ScalaDriverPersistenceJournaller(val driver: ScalaMongoDriver) extends Mon
     }
   }
 
-  override def batchAppend(writes: Seq[AtomicWrite]): Future[Seq[Try[Unit]]] = {
+  override def batchAppend(writes: immutable.Seq[AtomicWrite]): Future[immutable.Seq[Try[Unit]]] = {
     val batchFuture = if (driver.useSuffixedCollectionNames) {
       val fZero = Future.successful(Seq.empty[Try[BsonDocument]])
 
