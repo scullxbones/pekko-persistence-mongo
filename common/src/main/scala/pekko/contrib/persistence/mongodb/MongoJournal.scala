@@ -151,7 +151,7 @@ trait MongoPersistenceJournallingApi {
   
   def maxSequenceNr(pid: String, from: Long): Future[Long]
 
-  protected def squashToUnit[T](seq: Seq[Try[T]]): Seq[Try[Unit]] = seq.map(_.map(_ => ()))
+  protected def squashToUnit[T](seq: immutable.Seq[Try[T]]): immutable.Seq[Try[Unit]] = seq.map(_.map(_ => ()))
 }
 
 trait MongoPersistenceJournalMetrics extends MongoPersistenceJournallingApi with MongoMetrics {
