@@ -64,7 +64,7 @@ class ScalaDriverPersistenceJournaller(val driver: ScalaMongoDriver) extends Mon
       .mapConcat[Event](e =>
         Option(e.get(EVENTS)).filter(_.isArray).map(_.asArray).map(_.getValues.asScala.toList.collect {
           case d: BsonDocument => driver.deserializeJournal(d)
-        }).getOrElse(Seq.empty[Event])
+        }).getOrElse(immutable.Seq.empty[Event])
       )
       .filter(_.sn >= from)
       .filter(_.sn <= to)
@@ -93,7 +93,7 @@ class ScalaDriverPersistenceJournaller(val driver: ScalaMongoDriver) extends Mon
 
   override def batchAppend(writes: immutable.Seq[AtomicWrite]): Future[immutable.Seq[Try[Unit]]] = {
     val batchFuture = if (driver.useSuffixedCollectionNames) {
-      val fZero = Future.successful(Seq.empty[Try[BsonDocument]])
+      val fZero = Future.successful(immutable.Seq.empty[Try[BsonDocument]])
 
       // this should guarantee that futures are performed sequentially...
       writes
