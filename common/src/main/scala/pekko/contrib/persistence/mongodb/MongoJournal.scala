@@ -57,7 +57,7 @@ class MongoJournal(config: Config) extends AsyncWriteJournal {
    * Note that it is possible to reduce number of allocations by
    * caching some result `Seq` for the happy path, i.e. when no messages are rejected.
    */
-  override def asyncWriteMessages(messages: immutable.Seq[AtomicWrite]): Future[Seq[Try[Unit]]] =
+  override def asyncWriteMessages(messages: immutable.Seq[AtomicWrite]): Future[immutable.Seq[Try[Unit]]] =
     impl.batchAppend(messages)
 
   /**
@@ -143,7 +143,7 @@ trait JournallingFieldNames {
 object JournallingFieldNames extends JournallingFieldNames
 
 trait MongoPersistenceJournallingApi {
-  def batchAppend(writes: Seq[AtomicWrite]): Future[Seq[Try[Unit]]]
+  def batchAppend(writes: immutable.Seq[AtomicWrite]): Future[immutable.Seq[Try[Unit]]]
 
   def deleteFrom(persistenceId: String, toSequenceNr: Long): Future[Unit]
 
@@ -178,7 +178,7 @@ trait MongoPersistenceJournalMetrics extends MongoPersistenceJournallingApi with
     result
   }
   
-  abstract override def batchAppend(writes: Seq[AtomicWrite]): Future[Seq[Try[Unit]]] = timeIt (appendTimer) {
+  abstract override def batchAppend(writes: immutable.Seq[AtomicWrite]): Future[immutable.Seq[Try[Unit]]] = timeIt (appendTimer) {
     writeBatchSize.record(writes.map(_.size).sum)
     super.batchAppend(writes)
   }
