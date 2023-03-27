@@ -16,6 +16,7 @@ import org.mongodb.scala.model.Filters.equal
 import pekko.contrib.persistence.mongodb.JournallingFieldNames._
 import pekko.contrib.persistence.mongodb.RxStreamsInterop._
 
+import scala.collection.immutable
 import scala.concurrent.Future
 import scala.util.Try
 
@@ -189,14 +190,14 @@ class ScalaDriverMigrateToSuffixedCollections()(implicit system: ActorSystem) ex
   /**
     * Builds a Map grouping persistence ids by new suffixed collection names: Map(collectionName -> (Seq[pid], count))
     */
-  private[this] def buildTemporaryMap(makeCollection: String => Future[C], getNewCollectionName: String => String, summaryTitle: String): Future[Map[String, (Seq[String], Long)]] = {
+  private[this] def buildTemporaryMap(makeCollection: String => Future[C], getNewCollectionName: String => String, summaryTitle: String): Future[Map[String, (immutable.Seq[String], Long)]] = {
     logger.info(s"\n\n${summaryTitle.toUpperCase}: Gathering documents by suffixed collection names.  T h i s   m a y   t a k e   a   w h i l e  ! ! !   It may seem to freeze, be patient...\n")
 
     Source.future(makeCollection(""))
       .flatMapConcat(_.aggregate(List(group(s"$$$PROCESSOR_ID", sum("count", 1)))).asPekko)
       .runWith(Sink.seq)
       .map(_.groupBy(doc => getNewCollectionName(Option(doc.getString("_id").getValue).getOrElse(""))))
-      .map(_.mapValues(_.foldLeft((Seq[String](), 0L)){ (acc, doc) =>
+      .map(_.mapValues(_.foldLeft((immutable.Seq[String](), 0L)){ (acc, doc) =>
         (acc._1 :+ Option(doc.getString("_id").getValue).getOrElse(""), acc._2 + doc.getInt32("count").getValue)
       }).toMap)
   }
@@ -204,7 +205,7 @@ class ScalaDriverMigrateToSuffixedCollections()(implicit system: ActorSystem) ex
   /**
     * Migrates documents from an origin collection to some new collection, and returns a tuple containing amounts of documents inserted, removed, failed, ignored and handled.
     */
-  private[this] def handleDocsByCollection(pids: Seq[String], docCount: Long, makeCollection: String => Future[C], originCollectionName: String, newCollectionName: String, writeConcern: WriteConcern): Future[(Long, Long, Long, Long, Long)] = {
+  private[this] def handleDocsByCollection(pids: immutable.Seq[String], docCount: Long, makeCollection: String => Future[C], originCollectionName: String, newCollectionName: String, writeConcern: WriteConcern): Future[(Long, Long, Long, Long, Long)] = {
     if (originCollectionName == newCollectionName) {
       Future.successful((0L, 0L, 0L, docCount, docCount)) // just counting...
     } else {
@@ -247,7 +248,7 @@ class ScalaDriverMigrateToSuffixedCollections()(implicit system: ActorSystem) ex
   /**
     * Inserts many documents in some new collection and returns the amount of inserted documents (zero in case of failure)
     */
-  private[this] def insertManyDocs(docs: Seq[D], makeCollection: String => Future[C], newCollectionName: String, writeConcern: WriteConcern, tryNb: Int = 1): Future[Long] = {
+  private[this] def insertManyDocs(docs: immutable.Seq[D], makeCollection: String => Future[C], newCollectionName: String, writeConcern: WriteConcern, tryNb: Int = 1): Future[Long] = {
     Source.future(makeCollection(docs.head.getString(PROCESSOR_ID).getValue))
       .flatMapConcat(_.withWriteConcern(writeConcern).insertMany(docs).asPekko)
       .runWith(Sink.headOption)
