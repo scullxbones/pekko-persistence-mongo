@@ -25,8 +25,8 @@ class ScalaDriverMigrateToSuffixedCollectionsHeavyLoadSpec extends BaseUnitTest 
   override def afterAll(): Unit = cleanup()
 
   def config(extendedConfig: String = ""): Config = ConfigFactory.parseString(s"""
-   |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${classOf[ScalaDriverPersistenceExtension].getName}"
-   |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
+   |pekko.contrib.persistence.mongodb.mongo.driver = "${classOf[ScalaDriverPersistenceExtension].getName}"
+   |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
    |pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
    |pekko-contrib-mongodb-persistence-journal {
    |    # Class name of the plugin.
@@ -37,8 +37,8 @@ class ScalaDriverMigrateToSuffixedCollectionsHeavyLoadSpec extends BaseUnitTest 
    |    # Class name of the plugin.
    |  class = "pekko.contrib.persistence.mongodb.MongoSnapshots"
    |}
-   |pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.heavy-load = true
-   |pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.parallelism = 2
+   |pekko.contrib.persistence.mongodb.mongo.suffix-migration.heavy-load = true
+   |pekko.contrib.persistence.mongodb.mongo.suffix-migration.parallelism = 2
     $extendedConfig
    |""".stripMargin).withFallback(ConfigFactory.defaultReference())
 

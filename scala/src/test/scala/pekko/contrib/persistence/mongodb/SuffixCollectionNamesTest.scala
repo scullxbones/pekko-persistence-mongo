@@ -21,8 +21,8 @@ class SuffixCollectionNamesTest extends CanSuffixCollectionNames {
 
 object SuffixCollectionNamesTest {
   val extendedConfig = """
-    |pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.class = "pekko.contrib.persistence.mongodb.SuffixCollectionNamesTest"
-    |pekko.contrib.persistence.mongodb.driver.mongo.suffix-drop-empty-collections = true
+    |pekko.contrib.persistence.mongodb.mongo.suffix-builder.class = "pekko.contrib.persistence.mongodb.SuffixCollectionNamesTest"
+    |pekko.contrib.persistence.mongodb.mongo.suffix-drop-empty-collections = true
     |""".stripMargin
 
   def suffixedCollectionName(persistenceId: String): String = {

@@ -7,7 +7,7 @@ class MongoExtensionSpec extends BaseUnitTest {
 
   val driver = ConfigFactory.parseString(
     s"""
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver="${classOf[StubbyMongoPersistenceExtension].getName}"
+      |pekko.contrib.persistence.mongodb.mongo.driver="${classOf[StubbyMongoPersistenceExtension].getName}"
     """.stripMargin)
 
   "A mongo extension" should "load and verify the delivered configuration" in {

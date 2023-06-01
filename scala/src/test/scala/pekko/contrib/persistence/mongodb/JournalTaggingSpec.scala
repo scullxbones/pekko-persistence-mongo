@@ -34,10 +34,10 @@ abstract class JournalTaggingSpec(extensionClass: Class[_], database: String, ex
   def config(extensionClass: Class[_]): Config =
     ConfigFactory.parseString(s"""|
       |include "/application.conf"
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${extensionClass.getName}"
-      |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
-      |pekko.contrib.persistence.mongodb.driver.mongo.breaker.timeout.call = 0s
-      |pekko.contrib.persistence.mongodb.driver.mongo.breaker.maxTries = 0
+      |pekko.contrib.persistence.mongodb.mongo.driver = "${extensionClass.getName}"
+      |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
+      |pekko.contrib.persistence.mongodb.mongo.breaker.timeout.call = 0s
+      |pekko.contrib.persistence.mongodb.mongo.breaker.maxTries = 0
       |pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
       |pekko-contrib-mongodb-persistence-journal {
       |	  # Class name of the plugin.
@@ -97,7 +97,7 @@ abstract class JournalTaggingSpec(extensionClass: Class[_], database: String, ex
   }
 
   def whichCollection(pid: String): MongoCollection[Document] = {
-    config(extensionClass).withFallback(ConfigFactory.defaultReference()).getString("pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.class") match {
+    config(extensionClass).withFallback(ConfigFactory.defaultReference()).getString("pekko.contrib.persistence.mongodb.mongo.suffix-builder.class") match {
       case "" => pekkoPersistenceJournal
       case _  => mongoCollection(SuffixCollectionNamesTest.suffixedCollectionName(pid))
     }

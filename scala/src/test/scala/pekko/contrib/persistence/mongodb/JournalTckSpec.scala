@@ -17,9 +17,9 @@ object JournalTckSpec extends ContainerMongo {
     ConfigFactory.parseString(s"""
      |include "/application.conf"
      |pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
-     |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${extensionClass.getName}"
-     |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort"
-     |pekko.contrib.persistence.mongodb.driver.mongo.database = $database
+     |pekko.contrib.persistence.mongodb.mongo.driver = "${extensionClass.getName}"
+     |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort"
+     |pekko.contrib.persistence.mongodb.mongo.database = $database
      |pekko-contrib-mongodb-persistence-journal {
      |	  # Class name of the plugin.
      |  class = "pekko.contrib.persistence.mongodb.MongoJournal"

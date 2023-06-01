@@ -7,36 +7,36 @@ class MongoSettingsSpec extends BaseUnitTest {
 
   def reference: Config = ConfigFactory.parseString(
     """
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = foo
+      |pekko.contrib.persistence.mongodb.mongo.driver = foo
     """.stripMargin)
 
   def withUri: Config = ConfigFactory.parseString(
     """
-      |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://appuser:apppass@localhost:27017/sample_db_name"
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = foo
+      |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://appuser:apppass@localhost:27017/sample_db_name"
+      |pekko.contrib.persistence.mongodb.mongo.driver = foo
     """.stripMargin)
 
   def withMultiLegacy: Config = ConfigFactory.parseString(
     """
-      |pekko.contrib.persistence.mongodb.driver.mongo.urls = ["mongo1.example.com:27017","mongo2.example.com:27017"]
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = foo
+      |pekko.contrib.persistence.mongodb.mongo.urls = ["mongo1.example.com:27017","mongo2.example.com:27017"]
+      |pekko.contrib.persistence.mongodb.mongo.driver = foo
     """.stripMargin)
 
   def withMultiLegacyAndCreds: Config = ConfigFactory.parseString(
     """
-      |pekko.contrib.persistence.mongodb.driver.mongo.urls = ["mongo1.example.com:27017","mongo2.example.com:27017","mongo3.example.com:27017"]
-      |pekko.contrib.persistence.mongodb.driver.mongo.username = my_user
-      |pekko.contrib.persistence.mongodb.driver.mongo.password = my_pass
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = foo
+      |pekko.contrib.persistence.mongodb.mongo.urls = ["mongo1.example.com:27017","mongo2.example.com:27017","mongo3.example.com:27017"]
+      |pekko.contrib.persistence.mongodb.mongo.username = my_user
+      |pekko.contrib.persistence.mongodb.mongo.password = my_pass
+      |pekko.contrib.persistence.mongodb.mongo.driver = foo
     """.stripMargin)
 
   def withCredentialsLegacy: Config = ConfigFactory.parseString(
     """
-      |pekko.contrib.persistence.mongodb.driver.mongo.urls = ["mongo1.example.com:27017"]
-      |pekko.contrib.persistence.mongodb.driver.mongo.username = user
-      |pekko.contrib.persistence.mongodb.driver.mongo.password = pass
-      |pekko.contrib.persistence.mongodb.driver.mongo.db = spec_db
-      |pekko.contrib.persistence.mongodb.driver.mongo.driver = foo
+      |pekko.contrib.persistence.mongodb.mongo.urls = ["mongo1.example.com:27017"]
+      |pekko.contrib.persistence.mongodb.mongo.username = user
+      |pekko.contrib.persistence.mongodb.mongo.password = pass
+      |pekko.contrib.persistence.mongodb.mongo.db = spec_db
+      |pekko.contrib.persistence.mongodb.mongo.driver = foo
       """.stripMargin)
 
   def fixture[A](config: Config)(testCode: MongoSettings => A): A = {

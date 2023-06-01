@@ -17,9 +17,9 @@ object SnapshotTckSpec extends ContainerMongo {
     |include "/application.conf"
     |pekko.persistence.snapshot-store.plugin = "pekko-contrib-mongodb-persistence-snapshot"
     |pekko.persistence.journal.leveldb.native = off
-    |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${extensionClass.getName}"
-    |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort"
-    |pekko.contrib.persistence.mongodb.driver.mongo.database = $database
+    |pekko.contrib.persistence.mongodb.mongo.driver = "${extensionClass.getName}"
+    |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort"
+    |pekko.contrib.persistence.mongodb.mongo.database = $database
     |pekko-contrib-mongodb-persistence-snapshot {
     |	  # Class name of the plugin.
     |  class = "pekko.contrib.persistence.mongodb.MongoSnapshots"

@@ -25,8 +25,8 @@ class ScalaDriverMigrateToSuffixedCollectionsSpec extends BaseUnitTest with Cont
   override def afterAll(): Unit = cleanup()
 
   def config(extendedConfig: String = ""): Config = ConfigFactory.parseString(s"""
-   |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${classOf[ScalaDriverPersistenceExtension].getName}"
-   |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
+   |pekko.contrib.persistence.mongodb.mongo.driver = "${classOf[ScalaDriverPersistenceExtension].getName}"
+   |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
    |pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
    |pekko-contrib-mongodb-persistence-journal {
    |    # Class name of the plugin.
