@@ -15,8 +15,8 @@ import org.scalatestplus.junit.JUnitRunner
 import pekko.contrib.persistence.mongodb.ConfigLoanFixture.withConfig
 import pekko.contrib.persistence.mongodb.{BaseUnitTest, ContainerMongo, MongoReadJournal, ScalaDslMongoReadJournal}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ScalaDriverBsonPayloadSpec extends BaseUnitTest with ContainerMongo with BeforeAndAfterAll with ScalaFutures {

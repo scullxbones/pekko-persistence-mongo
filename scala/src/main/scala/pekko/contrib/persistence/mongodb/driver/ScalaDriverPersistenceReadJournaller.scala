@@ -17,9 +17,9 @@ import pekko.contrib.persistence.mongodb.JournallingFieldNames._
 import pekko.contrib.persistence.mongodb.driver.RxStreamsInterop._
 import pekko.contrib.persistence.mongodb.{Event, JournalStream, MongoPersistenceReadJournallingApi, ObjectIdOffset}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 object CurrentAllEvents {

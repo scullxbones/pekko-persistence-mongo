@@ -14,9 +14,9 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent.Eventually
 import org.scalatest.time.{Millis, Seconds, Span}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 
 abstract class JournalTaggingSpec(extensionClass: Class[_], database: String, extendedConfig: String = "|")
   extends BaseUnitTest

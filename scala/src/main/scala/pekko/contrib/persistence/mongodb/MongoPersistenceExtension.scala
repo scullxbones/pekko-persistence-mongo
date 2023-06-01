@@ -12,8 +12,8 @@ import org.apache.pekko.actor._
 import org.apache.pekko.stream.Materializer
 
 import java.util.concurrent.ConcurrentHashMap
+import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 object MongoPersistenceExtension extends ExtensionId[MongoPersistenceExtension] with ExtensionIdProvider {

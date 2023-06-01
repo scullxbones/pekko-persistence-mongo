@@ -7,7 +7,7 @@ import org.mongodb.scala._
 import org.mongodb.scala.bson._
 import pekko.contrib.persistence.mongodb.{Atom, Bin, BooleanPayload, Bson, CanDeserializeJournal, CanSerializeJournal, DocumentType, Event, FixedPointPayload, FloatingPointPayload, JournallingFieldNames, Legacy, LoadClass, Payload, Serialized, StringPayload}
 
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 
 object ScalaDriverSerializersExtension extends ExtensionId[ScalaDriverSerializers] with ExtensionIdProvider {
   override def lookup: ExtensionId[ScalaDriverSerializers] = ScalaDriverSerializersExtension

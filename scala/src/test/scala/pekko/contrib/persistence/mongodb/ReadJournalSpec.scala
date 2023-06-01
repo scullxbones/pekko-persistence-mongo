@@ -20,8 +20,8 @@ import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.tagobjects.Slow
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 
+import scala.collection.JavaConverters._
 import scala.concurrent.{Await, ExecutionContextExecutor, Future, Promise}
-import scala.jdk.CollectionConverters._
 import scala.util.Random
 
 abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: Class[A], dbName: String, extendedConfig: String = "|")
