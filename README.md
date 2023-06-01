@@ -65,15 +65,15 @@ A mongo uri can be specified.  This must meet the requirements of [Mongo's uri f
 For example `mongodb://user:secret@localhost:27017/my-pekko-persistence`.  If the `database name` is unspecified, it will be defaulted to `pekko-persistence`.
 
 ```
-pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://user:password@192.168.0.1:27017,192.168.0.2:27017/replicated-database"
+pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://user:password@192.168.0.1:27017,192.168.0.2:27017/replicated-database"
 ```
 
 If a user, password, and database are specified, the database will be used both as a credentials source as well as journal and/or snapshot storage.  
 In order to use a separate database for data storage, one can provide this with the following configuration item:
 
 ```
-pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://user:password@localhost/credential-database"
-pekko.contrib.persistence.mongodb.mongo.database = "storage-db"
+pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://user:password@localhost/credential-database"
+pekko.contrib.persistence.mongodb.driver.mongo.database = "storage-db"
 ```
 
 Proper MongoDB user permissions must be in place for the user to be able to access `storage-db` in this case
@@ -85,11 +85,11 @@ Proper MongoDB user permissions must be in place for the user to be able to acce
 A DB name can be specified, as can the names of the collections and indices used (one for journal, one for snapshots).
 
 ```
-pekko.contrib.persistence.mongodb.mongo.journal-collection = "my_persistent_journal"
-pekko.contrib.persistence.mongodb.mongo.journal-index = "my_journal_index"
-pekko.contrib.persistence.mongodb.mongo.snaps-collection = "my_persistent_snapshots"
-pekko.contrib.persistence.mongodb.mongo.snaps-index = "my_snaps_index"
-pekko.contrib.persistence.mongodb.mongo.journal-write-concern = "Acknowledged"
+pekko.contrib.persistence.mongodb.driver.mongo.journal-collection = "my_persistent_journal"
+pekko.contrib.persistence.mongodb.driver.mongo.journal-index = "my_journal_index"
+pekko.contrib.persistence.mongodb.driver.mongo.snaps-collection = "my_persistent_snapshots"
+pekko.contrib.persistence.mongodb.driver.mongo.snaps-index = "my_snaps_index"
+pekko.contrib.persistence.mongodb.driver.mongo.journal-write-concern = "Acknowledged"
 ```
 
 <a name="collectioncaches"/>
@@ -179,10 +179,10 @@ In addition to the mode of write concern, the `wtimeout` and `fsync` parameters 
 
 Default values below:
 ```
-pekko.contrib.persistence.mongodb.mongo.journal-wtimeout = 3s
-pekko.contrib.persistence.mongodb.mongo.journal-fsync = false
-pekko.contrib.persistence.mongodb.mongo.snaps-wtimeout = 3s
-pekko.contrib.persistence.mongodb.mongo.snaps-fsync = false
+pekko.contrib.persistence.mongodb.driver.mongo.journal-wtimeout = 3s
+pekko.contrib.persistence.mongodb.driver.mongo.journal-fsync = false
+pekko.contrib.persistence.mongodb.driver.mongo.snaps-wtimeout = 3s
+pekko.contrib.persistence.mongodb.driver.mongo.snaps-fsync = false
 ```
 
 <a name="buffer-size"/>
@@ -259,7 +259,7 @@ This functionality is also exposed for snapshots.
 Legacy serialization (0.x) can be forced via the configuration parameter:
 
 ```
-pekko.contrib.persistence.mongodb.mongo.use-legacy-serialization = true
+pekko.contrib.persistence.mongodb.driver.mongo.use-legacy-serialization = true
 ```
 
 This will fully delegate serialization to `pekko-serialization` by directly persisting the `PersistentRepr` as binary.  It can be used to carry over functionality that is dependent on the way that the `0.x` series used to treat storage of events.
@@ -301,7 +301,7 @@ If you don't want to use the default metrics library, you can also provide your 
 `pekko.contrib.persistence.mongodb.MongoTimer` and `pekko.contrib.persistence.mongodb.MongoHistogram`.
 
 To make pekko-persistence-mongo use your `pekko.contrib.persistence.mongodb.MetricsBuilder` implementation you need to
-specify the property: `pekko.contrib.persistence.mongodb.mongo.metrics-builder.class` with the full qualified class name
+specify the property: `pekko.contrib.persistence.mongodb.driver.mongo.metrics-builder.class` with the full qualified class name
 of your implementation of `pekko.contrib.persistence.mongodb.MetricsBuilder`.
 
 #### Future plans?
@@ -320,7 +320,7 @@ multiple instances of this plugin, something like the following can be added to 
 
 ```
 # Supply default uri
-pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://defaultHost:27017/db1"
+pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://defaultHost:27017/db1"
 
 pekko-contrib-mongodb-persistence-journal-other {
   # Select this plugin as journal implementation
@@ -460,8 +460,8 @@ Using the *suffixed collection names* feature is a matter of configuration and a
 ##### Configuration
 Inside your `application.conf` file, use the following lines to enable the feature:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-builder.separator = "_"
-pekko.contrib.persistence.mongodb.mongo.suffix-builder.class = "com.mycompany.myproject.SuffixCollectionNames"
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.separator = "_"
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.class = "com.mycompany.myproject.SuffixCollectionNames"
 ```
 
 Nothing happens as long as you do not provide a class extending or mixing in `pekko.contrib.persistence.mongodb.CanSuffixCollectionNames` trait, nor if its `getSuffixfromPersistenceId` method **always** returns an empty string.
@@ -472,7 +472,7 @@ Second line contains the entire package+name of the user class extending or mixi
 
 Optionally, you can choose to drop empty suffixed collections once they are empty, in order, for example, not to fill your database with a great number of useless collections. Be aware, however, that the underlying process is built upon MongoDB **non atomic** `count` and `drop` operations that *may* lead to race conditions. To enable this feature, just add the following line to your `application.conf` file:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-drop-empty-collections = true
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-drop-empty-collections = true
 ```
 
 ##### Code
@@ -528,7 +528,7 @@ Writes remain *atomic at the batch level*, as explained [above](#model) but, as 
 Events are first *grouped* by collection, then batch-persisted, each group of events in its own correspondent suffixed 
 journal. This means our 100 events may be persisted in mongo as *several* documents, decreasing performances but allowing multiple journals.
 
-If enabled (via the `pekko.contrib.persistence.mongodb.mongo.realtime-enable-persistence` configuration property) inserts 
+If enabled (via the `pekko.contrib.persistence.mongodb.driver.mongo.realtime-enable-persistence` configuration property) inserts 
 inside capped collection for live queries are performed the usual way, in one step. No grouping here, our 100 events are still 
 persisted as a single document in "pekko_persistence_realtime" collection.
 
@@ -627,8 +627,8 @@ Optionally, you can configure, through the following properties:
 
   how many times *INSERT* and *DELETE* operations may take place:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.max-insert-retry = 1
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.max-delete-retry = 1
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.max-insert-retry = 1
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.max-delete-retry = 1
 ```
 Careful, the value `0` means **unlimited** retries (not recommended)
 
@@ -636,7 +636,7 @@ Careful, the value `0` means **unlimited** retries (not recommended)
 
   how many *persistence Ids* may be processed at the same time:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.parallelism = 1
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.parallelism = 1
 ```
 
 
@@ -644,14 +644,14 @@ pekko.contrib.persistence.mongodb.mongo.suffix-migration.parallelism = 1
 
   the ability to clear "pekko_persistence_metadata" collection (defaults to false) and how many attempts may occur:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.empty-metadata = true
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.max-empty-metadata-retry = 1
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.empty-metadata = true
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.max-empty-metadata-retry = 1
 ```
 Careful, the value `0` means **unlimited** retries (not recommended)
 
 Choosing among *normal* or *heavy load* migration is done via the following property:
 ```
-pekko.contrib.persistence.mongodb.mongo.suffix-migration.heavy-load = false
+pekko.contrib.persistence.mongodb.driver.mongo.suffix-migration.heavy-load = false
 ```
 
 ###### Code

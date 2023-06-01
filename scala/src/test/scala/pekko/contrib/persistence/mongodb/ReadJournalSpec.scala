@@ -75,8 +75,8 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
     $extendedConfig
     |""".stripMargin).withFallback(ConfigFactory.defaultReference()).resolve()
 
-  def suffixCollNamesEnabled: Boolean = config(extensionClass).getString("pekko.contrib.persistence.mongodb.mongo.suffix-builder.class") != null &&
-    !config(extensionClass).getString("pekko.contrib.persistence.mongodb.mongo.suffix-builder.class").trim.isEmpty
+  def suffixCollNamesEnabled: Boolean = config(extensionClass).getString("pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.class") != null &&
+    !config(extensionClass).getString("pekko.contrib.persistence.mongodb.driver.mongo.suffix-builder.class").trim.isEmpty
 
   def props(id: String, promise: Promise[Unit], eventCount: Int): Props = Props(new PersistentCountdown(id, promise, eventCount))
 

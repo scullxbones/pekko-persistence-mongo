@@ -149,10 +149,10 @@ abstract class PersistentFsmSpec(extensionClass: Class[_], database: String, ext
     ConfigFactory.parseString(s"""
       |include "/application.conf"
       |pekko.actor.allow-java-serialization = on
-      |pekko.contrib.persistence.mongodb.mongo.driver = "${extensionClass.getName}"
-      |pekko.contrib.persistence.mongodb.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
-      |pekko.contrib.persistence.mongodb.mongo.breaker.timeout.call = 0s
-      |pekko.contrib.persistence.mongodb.mongo.breaker.maxTries = 0
+      |pekko.contrib.persistence.mongodb.driver.mongo.driver = "${extensionClass.getName}"
+      |pekko.contrib.persistence.mongodb.driver.mongo.mongouri = "mongodb://$host:$noAuthPort/$embedDB"
+      |pekko.contrib.persistence.mongodb.driver.mongo.breaker.timeout.call = 0s
+      |pekko.contrib.persistence.mongodb.driver.mongo.breaker.maxTries = 0
       |pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
       |pekko-contrib-mongodb-persistence-journal {
       |	  # Class name of the plugin.
