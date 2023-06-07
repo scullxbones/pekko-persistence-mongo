@@ -86,12 +86,7 @@ val commonSettings = Seq(
   publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 ) ++ inConfig(Ci)(Defaults.testTasks)
 
-lazy val `pekko-persistence-mongo-common` = (project in file("common"))
-  .settings(commonSettings:_*)
-  .configs(Ci)
-
 lazy val `pekko-persistence-mongo-scala` = (project in file("scala"))
-  .dependsOn(`pekko-persistence-mongo-common` % "test->test;compile->compile")
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
@@ -118,7 +113,7 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .configs(Ci)
 
 lazy val `pekko-persistence-mongo` = (project in file("."))
-  .aggregate(`pekko-persistence-mongo-common`, `pekko-persistence-mongo-scala`, `pekko-persistence-mongo-tools`)
+  .aggregate(`pekko-persistence-mongo-scala`, `pekko-persistence-mongo-tools`)
   .settings(
     crossScalaVersions := Nil,
     publish / skip := true,

@@ -5,8 +5,7 @@
 ## A MongoDB plugin for [pekko-persistence](https://pekko.apache.org/docs/pekko/current/typed/index-persistence.html)
 
 * Two projects, a core and a driver implementation. To use you must pull jars for *only* the driver. Common will be pulled in as a transitive dependency:
-    * common provides integration with pekko persistence, implementing the plugin API
-    * scala provides an implementation against the MongoDB official driver
+    * scala provides the driver implementation against the MongoDB official driver
 * The tests expect two mongods running, with and without authentication.  A utility script (`test_containers.sh`) will boot these as docker containers.
 * Supports Pekko SNAPSHOT series
 * Test suite runs against MongoDB major versions 4.4, 5.0, 6.0
@@ -384,7 +383,7 @@ typesafe config e.g. `application.conf`:
 
 (Official Scala)
 ```
-pekko.contrib.persistence.mongodb.official {
+pekko.contrib.persistence.mongodb.driver.official {
   minpoolsize = 0
   maxpoolsize = 100
   waitqueuemultiple = 5

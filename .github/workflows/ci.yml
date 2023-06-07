@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+
+  # Run build for any PR
+  pull_request:
+
 jobs:
   build:
     strategy:
