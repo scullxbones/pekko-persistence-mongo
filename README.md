@@ -4,7 +4,7 @@
 
 ## A MongoDB plugin for [pekko-persistence](https://pekko.apache.org/docs/pekko/current/typed/index-persistence.html)
 
-* The tests expect two mongods running, with and without authentication.  A utility script (`test_containers.sh`) will boot these as docker containers.
+* The tests expect two mongods running, with and without authentication. A utility script (`test_containers.sh`) will boot these as docker containers.
 * Supports Pekko 1.0.0-RC2
 * Test suite runs against MongoDB major versions 4.4, 5.0, 6.0
 * Cross-compiled against scala `2.12` and `2.13`
@@ -18,7 +18,7 @@
 ```scala
 libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongo-scala" % "1.0.0-SNAPSHOT"
 ```
-* Inside of your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
+* Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
 ```
 pekko.persistence.journal.plugin = "pekko-contrib-mongodb-persistence-journal"
@@ -26,7 +26,7 @@ pekko.persistence.snapshot-store.plugin = "pekko-contrib-mongodb-persistence-sna
 ```
 
 ### Details
-1. [Major changes in 3.x](#major)
+1. [Apache Pekko support](#pekko)
 1. [Configuration Details](#config)
     * [Mongo URI](#mongouri)
     * [Collection and Index](#mongocollection)
@@ -46,9 +46,11 @@ pekko.persistence.snapshot-store.plugin = "pekko-contrib-mongodb-persistence-sna
     * [Details](#suffixdetail)
     * [Migration tool](#suffixmigration)
 
-#### Pekko support
-TODO update docs
-* The driving change for this fork of the `akka-persistence-mongo` library is support of Apache Pekko 1.0.0
+<a name="pekko"/>
+
+#### Apache Pekko support
+
+* The aim of this fork of the `akka-persistence-mongo` library is to provide a MongoDB persistence plugin for Apache Pekko 1.0.0
 
 <a name="config"/>
 
