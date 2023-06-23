@@ -42,9 +42,10 @@ ThisBuild / version      := releaseV
 ThisBuild / scalaVersion := scalaV
 ThisBuild / versionScheme := Some("semver-spec")
 
-githubOwner := "scullxbones"
-githubRepository := "pekko-persistence-mongo"
-githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
+// this would be options to publish to GitHub packages maven repo:
+//githubOwner := "scullxbones"
+//githubRepository := "pekko-persistence-mongo"
+//githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
 
 val commonSettings = Seq(
   scalaVersion := scalaV,

@@ -61,8 +61,9 @@ jobs:
       run: |
         echo Running test suite for scala version ${{matrix.scala-version}}
         ./ci_build.sh ${{matrix.scala-version}}
-    - name: Publish SNAPSHOT to Github Packages for scala version
+    - name: Publish SNAPSHOT artifacts
       run: sbt "; +publish"
+      if: "contains(github.ref, 'main')"
     - name: Cleanup before cache
       shell: bash
       run: |
