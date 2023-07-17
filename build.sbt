@@ -45,7 +45,6 @@ ThisBuild / versionScheme := Some("semver-spec")
 // options to publish to GitHub packages maven repo:
 githubOwner := "scullxbones"
 githubRepository := "pekko-persistence-mongo"
-githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
 
 val commonSettings = Seq(
   scalaVersion := scalaV,
@@ -88,10 +87,6 @@ val commonSettings = Seq(
   Test / testOptions += Tests.Argument("-oDS"),
   Ci / testOptions += Tests.Argument("-l", "org.scalatest.tags.Slow"),
   Test / fork := false,
-  // Switch publishTo target for using Sonatype if RELEASE_SONATYPE env is true, otherwise publish to GitHub Packages:
-  publishTo := { if(sys.env.getOrElse("RELEASE_SONATYPE", "false").toBoolean) sonatypePublishTo.value else githubPublishTo.value },
-  publishConfiguration := publishConfiguration.value.withOverwrite(true),
-  publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 ) ++ inConfig(Ci)(Defaults.testTasks)
 
 lazy val `pekko-persistence-mongodb` = (project in file("scala"))
@@ -106,7 +101,11 @@ lazy val `pekko-persistence-mongodb` = (project in file("scala"))
       "org.reactivestreams" % "reactive-streams"  % "1.0.4"
     ),
     dependencyOverrides ++= Seq(
-    )
+    ),
+    // Switch publishTo target for using Sonatype if RELEASE_SONATYPE env is true, otherwise publish to GitHub Packages:
+    publishTo := { if (sys.env.getOrElse("RELEASE_SONATYPE", "false").toBoolean) sonatypePublishTo.value else githubPublishTo.value},
+    publishConfiguration := publishConfiguration.value.withOverwrite(true),
+    publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
   )
   .configs(Ci)
 
@@ -116,7 +115,8 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .settings(
     libraryDependencies ++= Seq(
       "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile"
-    )
+    ),
+    publish / skip := true
   )
   .configs(Ci)
 
