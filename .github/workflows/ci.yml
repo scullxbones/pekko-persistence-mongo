@@ -32,8 +32,9 @@ jobs:
       MONGODB_NOAUTH_PORT: 27117
       MONGODB_OPTS: --storageEngine wiredTiger --bind_ip_all
       CONTAINER_HOST: 127.0.0.1
-      AKKA_TEST_TIMEFACTOR: 10
+      PEKKO_TEST_TIMEFACTOR: 10
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      RELEASE_SONATYPE: 'false'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -61,9 +62,12 @@ jobs:
       run: |
         echo Running test suite for scala version ${{matrix.scala-version}}
         ./ci_build.sh ${{matrix.scala-version}}
-    - name: Publish SNAPSHOT artifacts
+    - name: Publish SNAPSHOT artifacts to GitHub packages
+      run: sbt publish
+      if: github.ref == 'ref/heads/main' && env.RELEASE_SONATYPE != 'true'
+    - name: Publish SNAPSHOT artifacts to Maven central
       run: sbt "; +publishSigned; sonatypeReleaseAll"
-      if: "contains(github.ref, 'main')"
+      if: github.ref == 'ref/heads/main' && env.RELEASE_SONATYPE == 'true'
     - name: Cleanup before cache
       shell: bash
       run: |
