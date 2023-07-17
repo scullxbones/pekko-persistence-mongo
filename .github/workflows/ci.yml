@@ -64,10 +64,10 @@ jobs:
         ./ci_build.sh ${{matrix.scala-version}}
     - name: Publish SNAPSHOT artifacts to GitHub packages
       run: sbt publish
-      if: github.ref == 'ref/heads/main' && env.RELEASE_SONATYPE != 'true'
+      if: ${{ github.ref_name == 'main' }} && ${{ env.RELEASE_SONATYPE != 'true' }}
     - name: Publish SNAPSHOT artifacts to Maven central
       run: sbt "; +publishSigned; sonatypeReleaseAll"
-      if: github.ref == 'ref/heads/main' && env.RELEASE_SONATYPE == 'true'
+      if: ${{ github.ref_name == 'main' }} && ${{ env.RELEASE_SONATYPE == 'true' }}
     - name: Cleanup before cache
       shell: bash
       run: |
