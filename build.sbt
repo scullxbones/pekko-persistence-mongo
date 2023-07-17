@@ -42,10 +42,10 @@ ThisBuild / version      := releaseV
 ThisBuild / scalaVersion := scalaV
 ThisBuild / versionScheme := Some("semver-spec")
 
-// this would be options to publish to GitHub packages maven repo:
-//githubOwner := "scullxbones"
-//githubRepository := "pekko-persistence-mongo"
-//githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
+// options to publish to GitHub packages maven repo:
+githubOwner := "scullxbones"
+githubRepository := "pekko-persistence-mongo"
+githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
 
 val commonSettings = Seq(
   scalaVersion := scalaV,
@@ -82,21 +82,19 @@ val commonSettings = Seq(
     "-Xlint"
   ),
   resolvers ++= Seq(
-    "Apache Pekko Staging" at "https://repository.apache.org/content/groups/staging",
-//    "Apache Pekko Releases" at "https://repository.apache.org/content/groups/public",
-    "Apache Pekko Snapshots" at "https://repository.apache.org/content/groups/snapshots",
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   ),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument("-oDS"),
   Ci / testOptions += Tests.Argument("-l", "org.scalatest.tags.Slow"),
   Test / fork := false,
-  ThisBuild / publishTo := sonatypePublishTo.value,
+  // Switch publishTo target for using Sonatype if RELEASE_SONATYPE env is true, otherwise publish to GitHub Packages:
+  publishTo := { if(sys.env.getOrElse("RELEASE_SONATYPE", "false").toBoolean) sonatypePublishTo.value else githubPublishTo.value },
   publishConfiguration := publishConfiguration.value.withOverwrite(true),
   publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 ) ++ inConfig(Ci)(Defaults.testTasks)
 
-lazy val `pekko-persistence-mongo-scala` = (project in file("scala"))
+lazy val `pekko-persistence-mongodb` = (project in file("scala"))
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
@@ -113,7 +111,7 @@ lazy val `pekko-persistence-mongo-scala` = (project in file("scala"))
   .configs(Ci)
 
 lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
-  .dependsOn(`pekko-persistence-mongo-scala` % "test->test;compile->compile")
+  .dependsOn(`pekko-persistence-mongodb` % "test->test;compile->compile")
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
@@ -123,7 +121,7 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .configs(Ci)
 
 lazy val `pekko-persistence-mongo` = (project in file("."))
-  .aggregate(`pekko-persistence-mongo-scala`, `pekko-persistence-mongo-tools`)
+  .aggregate(`pekko-persistence-mongodb`, `pekko-persistence-mongo-tools`)
   .settings(
     crossScalaVersions := Nil,
     publish / skip := true,
