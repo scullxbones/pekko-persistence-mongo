@@ -42,6 +42,26 @@ ThisBuild / version      := releaseV
 ThisBuild / scalaVersion := scalaV
 ThisBuild / versionScheme := Some("semver-spec")
 
+inThisBuild(List(
+  organization := "com.github.scullxbones",
+  homepage := Some(url("https://github.com/scullxbones/pekko-persistence-mongo")),
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  developers := List(
+    Developer(
+      "scullxbones",
+      "Brian Scully",
+      "scullduggery@gmail.com",
+      url("https://github.com/scullxbones")
+    ),
+    Developer(
+      "thjaeckle",
+      "Thomas Jaeckle",
+      "thomas.jaeckle@beyonnex.io",
+      url("https://github.com/thjaeckle")
+    )
+  )
+))
+
 val commonSettings = Seq(
   scalaVersion := scalaV,
   crossScalaVersions := Seq(scala212V, scala213V),
