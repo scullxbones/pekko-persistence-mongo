@@ -42,11 +42,6 @@ ThisBuild / version      := releaseV
 ThisBuild / scalaVersion := scalaV
 ThisBuild / versionScheme := Some("semver-spec")
 
-// options to publish to GitHub packages maven repo:
-githubOwner := "scullxbones"
-githubRepository := "pekko-persistence-mongo"
-githubTokenSource := TokenSource.Environment("GITHUB_TOKEN")
-
 val commonSettings = Seq(
   scalaVersion := scalaV,
   crossScalaVersions := Seq(scala212V, scala213V),
@@ -107,7 +102,15 @@ lazy val `pekko-persistence-mongodb` = (project in file("scala"))
     if (sys.env.getOrElse("RELEASE_SONATYPE", "false").toBoolean) {
       publishTo := sonatypePublishTo.value
     } else if (sys.env.getOrElse("RELEASE_GH_ACTIONS", "false").toBoolean) {
-      publishTo := githubPublishTo.value
+      // publish to github packages settings
+      publishTo := Some("GitHub scullxbones Apache Maven Packages" at "https://maven.pkg.github.com/scullxbones/pekko-persistence-mongo")
+      publishMavenStyle := true
+      credentials += Credentials(
+        "GitHub Package Registry",
+        "maven.pkg.github.com",
+        "scullxbones",
+        System.getenv("GITHUB_TOKEN")
+      )
     } else {
       publishTo := Some(Resolver.file("file", new File("target/unusedrepo")))
       publish / skip := true
