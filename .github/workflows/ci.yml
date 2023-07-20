@@ -63,12 +63,6 @@ jobs:
       run: |
         echo Running test suite for scala version ${{matrix.scala-version}}
         ./ci_build.sh ${{matrix.scala-version}}
-    - name: Publish SNAPSHOT artifacts to GitHub packages
-      run: sbt publish
-      if: ${{ github.ref_name == 'main' }} && ${{ env.RELEASE_GH_ACTIONS == 'true' }}
-    - name: Publish SNAPSHOT artifacts to Maven central
-      run: sbt "; +publishSigned; sonatypeReleaseAll"
-      if: ${{ github.ref_name == 'main' }} && ${{ env.RELEASE_SONATYPE == 'true' }}
     - name: Cleanup before cache
       shell: bash
       run: |
