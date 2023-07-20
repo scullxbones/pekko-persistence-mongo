@@ -117,26 +117,7 @@ lazy val `pekko-persistence-mongodb` = (project in file("scala"))
       "org.reactivestreams" % "reactive-streams"  % "1.0.4"
     ),
     dependencyOverrides ++= Seq(
-    ),
-    // Switch publishTo target for using Sonatype if RELEASE_SONATYPE env is true, otherwise publish to GitHub Packages:
-    if (sys.env.getOrElse("RELEASE_SONATYPE", "false").toBoolean) {
-      publishTo := sonatypePublishTo.value
-    } else if (sys.env.getOrElse("RELEASE_GH_ACTIONS", "false").toBoolean) {
-      // publish to github packages settings
-      publishTo := Some("GitHub scullxbones Apache Maven Packages" at "https://maven.pkg.github.com/scullxbones/pekko-persistence-mongo")
-      publishMavenStyle := true
-      credentials += Credentials(
-        "GitHub Package Registry",
-        "maven.pkg.github.com",
-        "scullxbones",
-        System.getenv("GITHUB_TOKEN")
-      )
-    } else {
-      publishTo := Some(Resolver.file("file", new File("target/unusedrepo")))
-      publish / skip := true
-    },
-    publishConfiguration := publishConfiguration.value.withOverwrite(true),
-    publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
+    )
   )
   .configs(Ci)
 
@@ -146,9 +127,7 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .settings(
     libraryDependencies ++= Seq(
       "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile"
-    ),
-    publishTo := Some(Resolver.file("file", new File("target/unusedrepo"))),
-    publish / skip := true
+    )
   )
   .configs(Ci)
 
