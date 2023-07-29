@@ -127,7 +127,9 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .settings(
     libraryDependencies ++= Seq(
       "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile"
-    )
+    ),
+    publish / skip := true,
+    publishTo := Some(Resolver.file("file", new File("target/unusedrepo")))
   )
   .configs(Ci)
 
