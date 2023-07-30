@@ -48,12 +48,6 @@ inThisBuild(List(
       "Brian Scully",
       "scullduggery@gmail.com",
       url("https://github.com/scullxbones")
-    ),
-    Developer(
-      "thjaeckle",
-      "Thomas Jaeckle",
-      "thomas.jaeckle@beyonnex.io",
-      url("https://github.com/thjaeckle")
     )
   )
 ))
