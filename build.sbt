@@ -37,6 +37,8 @@ lazy val Ci = config("ci").extend(Test)
 
 ThisBuild / scalaVersion := scalaV
 
+import xerial.sbt.Sonatype._
+
 inThisBuild(List(
   organization := "com.github.scullxbones",
   homepage := Some(url("https://github.com/scullxbones/pekko-persistence-mongo")),
