@@ -35,21 +35,14 @@ val commonDeps = Seq(
 
 lazy val Ci = config("ci").extend(Test)
 
-ThisBuild / organization := "com.github.scullxbones"
 ThisBuild / scalaVersion := scalaV
 
 inThisBuild(List(
   organization := "com.github.scullxbones",
   homepage := Some(url("https://github.com/scullxbones/pekko-persistence-mongo")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  developers := List(
-    Developer(
-      "scullxbones",
-      "Brian Scully",
-      "scullduggery@gmail.com",
-      url("https://github.com/scullxbones")
-    )
-  )
+  sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "pekko-persistence-mongo", "scullduggery@gmail.com")),
+  scalaVersion := scalaV
 ))
 
 val commonSettings = Seq(
