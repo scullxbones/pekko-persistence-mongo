@@ -1,5 +1,3 @@
-val releaseV = "1.0.0-RELEASE"
-
 val scala212V = "2.12.18"
 val scala213V = "2.13.11"
 
@@ -38,9 +36,7 @@ val commonDeps = Seq(
 lazy val Ci = config("ci").extend(Test)
 
 ThisBuild / organization := "com.github.scullxbones"
-ThisBuild / version      := releaseV
 ThisBuild / scalaVersion := scalaV
-ThisBuild / versionScheme := Some("semver-spec")
 
 inThisBuild(List(
   organization := "com.github.scullxbones",
@@ -73,7 +69,6 @@ val commonSettings = Seq(
     "org.mongodb" % "mongodb-driver-legacy" % MongoJavaDriverVersion
   ),
   libraryDependencySchemes += "org.scala-lang.modules" %% "scala-java8-compat" % VersionScheme.Always,
-  version := releaseV,
   organization := "com.github.scullxbones",
   scalacOptions ++= Seq(
     "-unchecked",
@@ -128,8 +123,7 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
     libraryDependencies ++= Seq(
       "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile"
     ),
-    publish / skip := true,
-    publishTo := Some(Resolver.file("file", new File("target/unusedrepo")))
+    publish / skip := true
   )
   .configs(Ci)
 
@@ -137,6 +131,5 @@ lazy val `pekko-persistence-mongo` = (project in file("."))
   .aggregate(`pekko-persistence-mongodb`, `pekko-persistence-mongo-tools`)
   .settings(
     crossScalaVersions := Nil,
-    publish / skip := true,
-    publishTo := Some(Resolver.file("file", new File("target/unusedrepo")))
+    publish / skip := true
   )
