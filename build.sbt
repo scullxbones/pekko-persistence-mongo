@@ -1,3 +1,5 @@
+publish / skip := true
+
 val scala212V = "2.12.18"
 val scala213V = "2.13.11"
 
@@ -35,17 +37,29 @@ val commonDeps = Seq(
 
 lazy val Ci = config("ci").extend(Test)
 
+ThisBuild / organization := "com.github.scullxbones"
 ThisBuild / scalaVersion := scalaV
+ThisBuild / versionScheme := Some("semver-spec")
 
 import xerial.sbt.Sonatype._
 
-inThisBuild(List(
-  organization := "com.github.scullxbones",
-  homepage := Some(url("https://github.com/scullxbones/pekko-persistence-mongo")),
-  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "pekko-persistence-mongo", "scullduggery@gmail.com")),
-  scalaVersion := scalaV
-))
+ThisBuild / sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "pekko-persistence-mongo", "scullduggery@gmail.com"))
+ThisBuild / licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+ThisBuild / developers := List(
+    Developer(
+      "scullxbones",
+      "Brian Scully",
+      "@scullxbones",
+      url("https://github.com/scullxbones/")
+    ),
+    Developer(
+      "thjaeckle",
+      "Thomas Jäckle",
+      "@thjaeckle",
+      url("https://github.com/thjaeckle/")
+    )
+  )
+ThisBuild / homepage := Some(url("https://github.com/scullxbones/pekko-persistence-mongo"))
 
 val commonSettings = Seq(
   scalaVersion := scalaV,
