@@ -1,5 +1,7 @@
 # Apache Pekko Persistence MongoDB driver (Journal + Read Journal, Snapshots)
 
+[![pekko-persistence-mongodb Scala version support](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb/latest.svg)](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb)
+
 * Test suite verifies against MongoDB 4.4 5.0 6.0
 
 ## A MongoDB plugin for [pekko-persistence](https://pekko.apache.org/docs/pekko/current/typed/index-persistence.html)
@@ -16,7 +18,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0.0-SNAPSHOT"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
