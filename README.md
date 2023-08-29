@@ -18,7 +18,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0.1"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
@@ -62,6 +62,16 @@ If previously the `akka-persistence-mongo` library was used together with Akka a
 complete stack should be migrated to Pekko, Pekko-Persistence and `pekko-persistence-mongo` as a replacement, the
 following section describes migration steps to take.
 
+The root configuration key changed from `akka` to `pekko`, so adjust your configuration accordingly, e.g.  
+from:
+```hocon
+akka.contrib.persistence.mongodb.mongo.mongouri = "xxx"
+```
+to:
+```hocon
+pekko.contrib.persistence.mongodb.mongo.mongouri = "xxx"
+```
+
 This fork for Pekko adjusts the default collection names.
 The previous (in `akka-persistence-mongo`) default collection names were:
 ```hocon
@@ -77,6 +87,7 @@ akka {
           snaps-index = "akka_persistence_snaps_index"
 
           realtime-collection = "akka_persistence_realtime"
+
           metadata-collection = "akka_persistence_metadata"
         }
       }
@@ -85,7 +96,7 @@ akka {
 }
 ```
 
-The new default collection names are (see also [reference.conf](scala/src/main/resources/reference.conf#L14):
+The new default collection names are (see also [reference.conf](scala/src/main/resources/reference.conf#L14)):
 ```hocon
 pekko {
   contrib {
