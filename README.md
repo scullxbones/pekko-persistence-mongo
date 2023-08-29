@@ -99,7 +99,9 @@ pekko {
           snaps-index = "pekko_persistence_snaps_index"
 
           realtime-collection = "pekko_persistence_realtime"
+          
           metadata-collection = "pekko_persistence_metadata"
+          metadata-index = "pekko_persistence_metadata_index"
         }
       }
     }
@@ -116,6 +118,8 @@ pekko.contrib.persistence.mongodb.mongo.journal-index = "akka_persistence_journa
 pekko.contrib.persistence.mongodb.mongo.snaps-collection = "akka_persistence_snaps"
 pekko.contrib.persistence.mongodb.mongo.snaps-index = "akka_persistence_snaps_index"
 pekko.contrib.persistence.mongodb.mongo.realtime-collection = "akka_persistence_realtime"
+pekko.contrib.persistence.mongodb.mongo.metadata-collection = "akka_persistence_metadata"
+pekko.contrib.persistence.mongodb.mongo.metadata-index = "akka_persistence_metadata_pid"
 ```
 
 Apart from that, no other migration steps are currently known.
@@ -157,6 +161,8 @@ pekko.contrib.persistence.mongodb.mongo.journal-collection = "my_persistent_jour
 pekko.contrib.persistence.mongodb.mongo.journal-index = "my_journal_index"
 pekko.contrib.persistence.mongodb.mongo.snaps-collection = "my_persistent_snapshots"
 pekko.contrib.persistence.mongodb.mongo.snaps-index = "my_snaps_index"
+pekko.contrib.persistence.mongodb.mongo.metadata-collection = "my_metadata_collection"
+pekko.contrib.persistence.mongodb.mongo.metadata-index = "my_metadata_index"
 pekko.contrib.persistence.mongodb.mongo.journal-write-concern = "Acknowledged"
 ```
 
