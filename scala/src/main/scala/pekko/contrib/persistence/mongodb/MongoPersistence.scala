@@ -284,7 +284,7 @@ abstract class MongoPersistenceDriver(as: ActorSystem, config: Config)
     metadataCache.getOrElseCreate(metadataCollectionName, collectionName => {
       val metadataCollection = ensureCollection(collectionName)
       metadataCollection.flatMap(
-        ensureIndex("pekko_persistence_metadata_pid",
+        ensureIndex(metadataIndexName,
           unique = true, sparse = true,
           JournallingFieldNames.PROCESSOR_ID -> 1)(_)
       )
@@ -326,6 +326,8 @@ abstract class MongoPersistenceDriver(as: ActorSystem, config: Config)
   def realtimeCollectionSize: Long = settings.realtimeCollectionSize
 
   def metadataCollectionName: String = settings.MetadataCollection
+
+  def metadataIndexName: String = settings.MetadataIndex
 
   def mongoUri: String = settings.MongoUri
 

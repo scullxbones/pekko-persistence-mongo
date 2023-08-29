@@ -107,6 +107,7 @@ class MongoSettings(val config: Config) {
   val realtimeCollectionSize: Long = config.getLong("realtime-collection-size")
 
   val MetadataCollection: String = config.getString("metadata-collection")
+  val MetadataIndex: String = config.getString("metadata-index")
 
   val UseLegacyJournalSerialization: Boolean = config.getBoolean("use-legacy-serialization")
   
