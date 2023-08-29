@@ -1,5 +1,7 @@
 # Apache Pekko Persistence MongoDB driver (Journal + Read Journal, Snapshots)
 
+[![pekko-persistence-mongodb Scala version support](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb/latest.svg)](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb)
+
 * Test suite verifies against MongoDB 4.4 5.0 6.0
 
 ## A MongoDB plugin for [pekko-persistence](https://pekko.apache.org/docs/pekko/current/typed/index-persistence.html)
@@ -16,7 +18,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0.0-SNAPSHOT"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.0"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
@@ -51,6 +53,72 @@ pekko.persistence.snapshot-store.plugin = "pekko-contrib-mongodb-persistence-sna
 #### Apache Pekko support
 
 * The aim of this fork of the `akka-persistence-mongo` library is to provide a MongoDB persistence plugin for Apache Pekko 1.0.0
+
+<a name="akka-pekko-migration"/>
+
+##### Migrating from `akka-persistence-mongo` to `pekko-persistence-mongo`
+
+If previously the `akka-persistence-mongo` library was used together with Akka and Akka-Persistence and now the 
+complete stack should be migrated to Pekko, Pekko-Persistence and `pekko-persistence-mongo` as a replacement, the
+following section describes migration steps to take.
+
+This fork for Pekko adjusts the default collection names.
+The previous (in `akka-persistence-mongo`) default collection names were:
+```hocon
+akka {
+  contrib {
+    persistence {
+      mongodb {
+        mongo {
+          journal-collection = "akka_persistence_journal"
+          journal-index = "akka_persistence_journal_index"
+
+          snaps-collection = "akka_persistence_snaps"
+          snaps-index = "akka_persistence_snaps_index"
+
+          realtime-collection = "akka_persistence_realtime"
+          metadata-collection = "akka_persistence_metadata"
+        }
+      }
+    }
+  }
+}
+```
+
+The new default collection names are (see also [reference.conf](scala/src/main/resources/reference.conf#L14):
+```hocon
+pekko {
+  contrib {
+    persistence {
+      mongodb {
+        mongo {
+          journal-collection = "pekko_persistence_journal"
+          journal-index = "pekko_persistence_journal_index"
+
+          snaps-collection = "pekko_persistence_snaps"
+          snaps-index = "pekko_persistence_snaps_index"
+
+          realtime-collection = "pekko_persistence_realtime"
+          metadata-collection = "pekko_persistence_metadata"
+        }
+      }
+    }
+  }
+}
+```
+
+Unless in the previous use of `akka-persistence-mongo` the default collection names were already adjusted and overwritten, the
+collection names of `pekko-persistence-mongo` have to be adjusted to the previous (`akka-` prefixed) ones.  
+This can e.g. be done by adding the following configuration:
+```hocon
+pekko.contrib.persistence.mongodb.mongo.journal-collection = "akka_persistence_journal"
+pekko.contrib.persistence.mongodb.mongo.journal-index = "akka_persistence_journal_index"
+pekko.contrib.persistence.mongodb.mongo.snaps-collection = "akka_persistence_snaps"
+pekko.contrib.persistence.mongodb.mongo.snaps-index = "akka_persistence_snaps_index"
+pekko.contrib.persistence.mongodb.mongo.realtime-collection = "akka_persistence_realtime"
+```
+
+Apart from that, no other migration steps are currently known.
 
 <a name="config"/>
 
