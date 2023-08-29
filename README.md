@@ -1,6 +1,8 @@
 # Apache Pekko Persistence MongoDB driver (Journal + Read Journal, Snapshots)
 
 [![pekko-persistence-mongodb Scala version support](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb/latest.svg)](https://index.scala-lang.org/scullxbones/pekko-persistence-mongo/pekko-persistence-mongodb)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.scullxbones/pekko-persistence-mongodb_2.13?label=maven)](https://central.sonatype.com/artifact/com.github.scullxbones/pekko-persistence-mongodb_2.13/1.0.1)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 * Test suite verifies against MongoDB 4.4 5.0 6.0
 
