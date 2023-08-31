@@ -8,7 +8,7 @@ import org.apache.pekko.actor.ActorRef
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset}
 import org.apache.pekko.persistence.{AtomicWrite, PersistentRepr}
-import org.apache.pekko.serialization.{Serialization, SerializerWithStringManifest}
+import org.apache.pekko.serialization.{Serialization, Serializer, SerializerWithStringManifest}
 
 import scala.collection.immutable.{Seq => ISeq}
 import scala.util.{Failure, Success, Try}
@@ -48,17 +48,27 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
 
   val hint = "ser"
   lazy val content: C = {
-
     val clazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className)
+    val backwardsCompatClazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className.replace("akka", "org.apache.pekko"))
+    Try(tryDeserialize(clazz, clazz.flatMap(c => Try(ser.serializerFor(c)))))
+      .recover({
+        case _ => tryDeserialize(backwardsCompatClazz, backwardsCompatClazz.flatMap(c => Try(ser.serializerFor(c))))
+      }) match {
+      case Failure(x) => throw x
+      case Success(deser) => deser
+    }
+  }
 
-    val tried = (serializedManifest,serializerId,clazz.flatMap(c => Try(ser.serializerFor(c)))) match {
+  private def tryDeserialize(clazz: Try[Class[_ <: X forSome {type X <: AnyRef}]],
+                             serializer: Try[Serializer]): C = {
+    val tried = (serializedManifest, serializerId, serializer) match {
       // Manifest was serialized, class exists ~ prefer read-time configuration
       case (Some(manifest), _, Success(clazzSer)) =>
         ser.deserialize(bytes, clazzSer.identifier, manifest)
 
       // No manifest id serialized, prefer read-time configuration
       case (None, _, Success(clazzSer)) =>
-        ser.deserialize[X forSome { type X <: AnyRef }](bytes, clazzSer.identifier, clazz.toOption)
+        ser.deserialize[X forSome {type X <: AnyRef}](bytes, clazzSer.identifier, clazz.toOption)
 
       // Manifest, id were serialized, class doesn't exist - use write-time configuration
       case (Some(manifest), Some(id), Failure(_)) =>
@@ -67,11 +77,11 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
       // Below cases very unlikely to succeed
 
       // No manifest id serialized, class doesn't exist - use write-time configuration
-      case (None, Some(id),Failure(_)) =>
-        ser.deserialize[X forSome { type X <: AnyRef }](bytes, id, clazz.toOption)
+      case (None, Some(id), Failure(_)) =>
+        ser.deserialize[X forSome {type X <: AnyRef}](bytes, id, clazz.toOption)
 
       // fall back
-      case (_,None, Failure(_)) =>
+      case (_, None, Failure(_)) =>
         ser.deserialize(bytes, clazz.get)
     }
 
