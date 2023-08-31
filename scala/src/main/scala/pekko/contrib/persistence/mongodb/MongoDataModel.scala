@@ -49,7 +49,7 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
   val hint = "ser"
   lazy val content: C = {
     val clazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className)
-    val backwardsCompatClazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className.replace("akka", "org.apache.pekko"))
+    def backwardsCompatClazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className.replace("akka", "org.apache.pekko"))
     Try(tryDeserialize(clazz, clazz.flatMap(c => Try(ser.serializerFor(c)))))
       .recover({
         case _ => tryDeserialize(backwardsCompatClazz, backwardsCompatClazz.flatMap(c => Try(ser.serializerFor(c))))
