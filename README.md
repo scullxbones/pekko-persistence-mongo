@@ -68,7 +68,7 @@ If you are using a feature of Akka that uses persistence under the hood and pote
 of the persistence data (classic PersistentFSM is a known example), then this module will implicitly translate that data when reading
 to the Pekko class name to be able to deserialize it and keep compatibility. The opposite is true if you migrate and find an issue with
 your Pekko migration and need to roll back, but your application has already persisted entries with the new Pekko class name. The same functionality
-has been backported to allow rolling back your application, but you must be on `akka-persistence-mongo` version **4.0.0** to have this translation.
+has been backported to allow rolling back your application, but you must be on a minimum `akka-persistence-mongo` version of **3.1.0** to have this translation.
 
 The root configuration key changed from `akka` to `pekko`, so adjust your configuration accordingly, e.g.  
 from:
