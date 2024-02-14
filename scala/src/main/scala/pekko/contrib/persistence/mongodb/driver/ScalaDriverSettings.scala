@@ -19,7 +19,7 @@ object ScalaDriverSettings extends ExtensionId[ScalaDriverSettings] with Extensi
     new ScalaDriverSettings(systemConfig.getConfig(fullPath))
   }
 
-  override def lookup(): ExtensionId[ScalaDriverSettings] = ScalaDriverSettings
+  override def lookup: ExtensionId[ScalaDriverSettings] = ScalaDriverSettings
 
 }
 
@@ -54,7 +54,7 @@ class ScalaDriverSettings(config: Config) extends OfficialDriverSettings(config)
           .maxConnectionLifeTime(getLongQueryProperty("maxlifetimems").getOrElse(MaxConnectionLifeTime.toMillis), TimeUnit.MILLISECONDS)
           .minSize(getIntQueryProperty("minpoolsize").getOrElse(MinConnectionsPerHost))
           .maxSize(getIntQueryProperty("maxpoolsize").getOrElse(ConnectionsPerHost))
-          ()
+        ()
       }.applyToServerSettings((t: ServerSettings.Builder) => {
       t.heartbeatFrequency(getLongQueryProperty("heartbeatfrequencyms").getOrElse(HeartbeatFrequency.toMillis), TimeUnit.MILLISECONDS)
         .minHeartbeatFrequency(MinHeartbeatFrequency.toMillis, TimeUnit.MILLISECONDS) // no 'minHeartbeatFrequency' in ConnectionString

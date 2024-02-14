@@ -9,7 +9,7 @@ object ReflectiveLookupExtension extends ExtensionId[ReflectiveLookupExtension] 
   override def createExtension(system: ExtendedActorSystem): ReflectiveLookupExtension =
     new ReflectiveLookupExtension(system)
 
-  override def lookup(): ExtensionId[ReflectiveLookupExtension] = ReflectiveLookupExtension
+  override def lookup: ExtensionId[ReflectiveLookupExtension] = ReflectiveLookupExtension
 }
 
 class ReflectiveLookupExtension(extendedActorSystem: ExtendedActorSystem) extends Extension {

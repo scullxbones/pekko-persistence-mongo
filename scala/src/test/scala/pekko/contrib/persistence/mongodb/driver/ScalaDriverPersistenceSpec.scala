@@ -7,6 +7,7 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.junit.JUnitRunner
 import pekko.contrib.persistence.mongodb.ConfigLoanFixture.withConfig
 import pekko.contrib.persistence.mongodb.{BaseUnitTest, ContainerMongo}
+import org.mongodb.scala.ObservableFuture
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}

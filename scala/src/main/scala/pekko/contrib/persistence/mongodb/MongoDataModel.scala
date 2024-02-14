@@ -48,12 +48,12 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
 
   val hint = "ser"
   lazy val content: C = {
-    val clazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className)
+    val clazz = loadClass.getClassFor[AnyRef](className)
 
     Try(tryDeserialize(clazz, clazz.flatMap(c => Try(ser.serializerFor(c)))))
       .recover({
         case _ if className.startsWith("akka.") =>
-          val backwardsCompatClazz = loadClass.getClassFor[X forSome { type X <: AnyRef }](className.replaceFirst("akka", "org.apache.pekko"))
+          val backwardsCompatClazz = loadClass.getClassFor[AnyRef](className.replaceFirst("akka", "org.apache.pekko"))
           tryDeserialize(backwardsCompatClazz, backwardsCompatClazz.flatMap(c => Try(ser.serializerFor(c))))
         case x => throw x
       }) match {
@@ -62,7 +62,7 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
     }
   }
 
-  private def tryDeserialize(clazz: Try[Class[_ <: X forSome {type X <: AnyRef}]],
+  private def tryDeserialize(clazz: Try[Class[_ <: AnyRef]],
                              serializer: Try[Serializer]): C = {
     val tried = (serializedManifest, serializerId, serializer) match {
       // Manifest was serialized, class exists ~ prefer read-time configuration
@@ -71,7 +71,7 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
 
       // No manifest id serialized, prefer read-time configuration
       case (None, _, Success(clazzSer)) =>
-        ser.deserialize[X forSome {type X <: AnyRef}](bytes, clazzSer.identifier, clazz.toOption)
+        ser.deserialize[AnyRef](bytes, clazzSer.identifier, clazz.toOption)
 
       // Manifest, id were serialized, class doesn't exist - use write-time configuration
       case (Some(manifest), Some(id), Failure(_)) =>
@@ -81,7 +81,7 @@ case class Serialized[C <: AnyRef](bytes: Array[Byte],
 
       // No manifest id serialized, class doesn't exist - use write-time configuration
       case (None, Some(id), Failure(_)) =>
-        ser.deserialize[X forSome {type X <: AnyRef}](bytes, id, clazz.toOption)
+        ser.deserialize[AnyRef](bytes, id, clazz.toOption)
 
       // fall back
       case (_, None, Failure(_)) =>
