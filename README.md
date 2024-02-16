@@ -11,7 +11,7 @@
 * The tests expect two mongods running, with and without authentication. A utility script (`test_containers.sh`) will boot these as docker containers.
 * Supports Pekko 1.0.0
 * Test suite runs against MongoDB major versions 4.4, 5.0, 6.0
-* Cross-compiled against scala `2.12` and `2.13`
+* Cross-compiled against scala `2.12`, `2.13` and `3` - *WARNING* in the case of Scala 3 this library uses `2.13` version of `mongo-scala-driver`, because it is not yet available for Scala 3.
 * Be aware that there is a `16MB` payload size limit on snapshots and journal events.  In addition a journal batch must be <= `16MB` in size.  A journal batch is defined by the `Seq` of events passed to `persistAll`.
 
 

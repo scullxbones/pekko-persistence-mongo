@@ -19,14 +19,20 @@ jobs:
             scala-version: 2.12.18
           - mongo-version: 4.4
             scala-version: 2.13.11
+          - mongo-version: 4.4
+            scala-version: 3.3.0
           - mongo-version: "5.0" # 5.0 must be quoted, otherwise will be truncated to 5
             scala-version: 2.12.18
           - mongo-version: "5.0"
             scala-version: 2.13.11
+          - mongo-version: "5.0"
+            scala-version: 3.3.0
           - mongo-version: "6.0"
             scala-version: 2.12.18
           - mongo-version: "6.0"
             scala-version: 2.13.11
+          - mongo-version: "6.0"
+            scala-version: 3.3.0
     env:
       MONGODB_AUTH_PORT: 28117
       MONGODB_NOAUTH_PORT: 27117

@@ -178,9 +178,9 @@ abstract class JournalTaggingSpec(extensionClass: Class[_], database: String, ex
       readJournal
         .eventsByTag("qux", Offset.noOffset)
         .viaMat(KillSwitches.single)(Keep.right)
-        .toMat(Sink.actorRef(target.ref, "done", Status.Failure))(Keep.left).run()
+        .toMat(Sink.actorRef(target.ref, "done", Status.Failure.apply))(Keep.left).run()
     try {
-      target.receiveN(3).map(_.asInstanceOf[EventEnvelope].persistenceId) should contain only(pids:_*)
+      target.receiveN(3).map(_.asInstanceOf[EventEnvelope].persistenceId) should contain theSameElementsAs(pids)
       val newPa = as.actorOf(Taggarific.props("qux"),"tag-qux")
       deathWatch.send(newPa, Taggarific.TaggedEvent("qux", Set("foo","bar","qux")))
       deathWatch.expectMsg(Taggarific.Persisted)

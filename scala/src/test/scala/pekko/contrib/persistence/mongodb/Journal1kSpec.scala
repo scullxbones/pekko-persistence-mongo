@@ -47,7 +47,7 @@ abstract class Journal1kSpec(extensionClass: Class[_], database: String, extende
   import concurrent.duration._
 
   "A counter" should "persist the counter to 1000" taggedAs Slow in withConfig(config(extensionClass), "pekko-contrib-mongodb-persistence-journal", "1k-test-persist") { case (as,config) =>
-    implicit val askTimeout = Timeout(2.minutes)
+    implicit val askTimeout: Timeout = Timeout(2.minutes)
     val counter = as.actorOf(Counter.props, id)
     (1 to 1000).foreach(_ => counter ! Inc)
     val result = (counter ? GetCounter).mapTo[Int]
@@ -57,7 +57,7 @@ abstract class Journal1kSpec(extensionClass: Class[_], database: String, extende
   }
 
   it should "restore the counter back to 1000"  taggedAs Slow in withConfig(config(extensionClass), "pekko-contrib-mongodb-persistence-journal", "1k-test-restore") { case (as, config) =>
-    implicit val askTimeout = Timeout(2.minutes)
+    implicit val askTimeout: Timeout = Timeout(2.minutes)
     val counter = as.actorOf(Counter.props, id)
     val result = (counter ? GetCounter).mapTo[Int]
     whenReady(result, timeout(askTimeout.duration + 10.seconds)) { onek =>

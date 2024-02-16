@@ -154,7 +154,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
       val ks =
         readJournal.allEvents()
           .viaMat(KillSwitches.single)(Keep.right)
-          .toMat(Sink.actorRef[EventEnvelope](probe.ref, 'complete, Status.Failure))(Keep.left)
+          .toMat(Sink.actorRef[EventEnvelope](probe.ref, Symbol("complete"), Status.Failure.apply(_)))(Keep.left)
           .run()
       Thread.sleep(1000L)
 
@@ -230,7 +230,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
       val readJournal =
         PersistenceQuery(as).readJournalFor[ScalaDslMongoReadJournal](MongoReadJournal.Identifier)
 
-      readJournal.currentPersistenceIds().runWith(Sink.actorRef(probe.ref, 'complete, Status.Failure))
+      readJournal.currentPersistenceIds().runWith(Sink.actorRef(probe.ref, Symbol("complete"), Status.Failure.apply))
 
       probe.receiveN(6, 5.seconds.dilated) should contain allOf ("1", "2", "3", "4", "5")
 
@@ -312,7 +312,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
       val ks =
         readJournal.persistenceIds()
           .viaMat(KillSwitches.single)(Keep.right)
-          .toMat(Sink.actorRef(probe.ref, 'complete, Status.Failure))(Keep.left)
+          .toMat(Sink.actorRef(probe.ref, Symbol("complete"), Status.Failure.apply))(Keep.left)
           .run()
 
       ars slice (3, 5) foreach { ar =>
@@ -378,7 +378,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
       val ks = readJournal
         .eventsByPersistenceId("foo-live", 2L, 3L)
         .viaMat(KillSwitches.single)(Keep.right)
-        .toMat(Sink.actorRef(probe.ref, 'complete, Status.Failure))(Keep.left)
+        .toMat(Sink.actorRef(probe.ref, Symbol("complete"), Status.Failure.apply))(Keep.left)
         .run()
 
       Thread.sleep(1000L)
@@ -414,7 +414,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
       val ks = readJournal
         .eventsByPersistenceId("foo-long-running", 2L, 3L)
         .viaMat(KillSwitches.single)(Keep.right)
-        .toMat(Sink.actorRef(probe.ref, 'complete, Status.Failure))(Keep.left)
+        .toMat(Sink.actorRef(probe.ref, Symbol("complete"), Status.Failure.apply))(Keep.left)
         .run()
 
       Thread.sleep(1.minute.toMillis)
@@ -499,7 +499,7 @@ abstract class ReadJournalSpec[A <: MongoPersistenceExtension](extensionClass: C
 
       val sources = (1 to nrOfActors) map (nr => readJournal.eventsByPersistenceId(s"pid-$nr", 0, Long.MaxValue))
 
-      val sink = Sink.actorRef(probe.ref, "complete", Status.Failure)
+      val sink = Sink.actorRef(probe.ref, "complete", Status.Failure.apply)
 
       val ks = sources.reduce(_ merge _).viaMat(KillSwitches.single)(Keep.right).toMat(sink)(Keep.left).run()
 

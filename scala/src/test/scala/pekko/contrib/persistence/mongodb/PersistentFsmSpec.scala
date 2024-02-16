@@ -65,9 +65,9 @@ object PersistentFsmSpec {
 
     override def applyEvent(event: DomainEvent, cartBeforeEvent: ShoppingCart): ShoppingCart = {
       event match {
-        case ItemAdded(item) ⇒ cartBeforeEvent.addItem(item)
-        case OrderExecuted   ⇒ cartBeforeEvent
-        case OrderDiscarded  ⇒ cartBeforeEvent.empty()
+        case ItemAdded(item) => cartBeforeEvent.addItem(item)
+        case OrderExecuted   => cartBeforeEvent
+        case OrderDiscarded  => cartBeforeEvent.empty()
       }
     }
 
@@ -86,45 +86,45 @@ object PersistentFsmSpec {
     startWith(LookingAround, EmptyShoppingCart)
 
     when(LookingAround) {
-      case Event(AddItem(item), _) ⇒
+      case Event(AddItem(item), _) =>
         goto(Shopping) applying ItemAdded(item) forMax 1.second
-      case Event(GetCurrentCart, data) ⇒
-        stay replying data
+      case Event(GetCurrentCart, data) =>
+        stay() replying data
     }
 
     when(Shopping) {
-      case Event(AddItem(item), _) ⇒
-        stay applying ItemAdded(item) forMax 1.second
-      case Event(Buy, _) ⇒
+      case Event(AddItem(item), _) =>
+        stay() applying ItemAdded(item) forMax 1.second
+      case Event(Buy, _) =>
         goto(Paid) applying OrderExecuted andThen {
-          case NonEmptyShoppingCart(items) ⇒
+          case NonEmptyShoppingCart(items) =>
             reportActor ! PurchaseWasMade(items)
             saveStateSnapshot()
-          case EmptyShoppingCart ⇒ saveStateSnapshot()
+          case EmptyShoppingCart => saveStateSnapshot()
         }
-      case Event(Leave, _) ⇒
-        stop applying OrderDiscarded andThen {
-          _ ⇒
+      case Event(Leave, _) =>
+        stop() applying OrderDiscarded andThen {
+          _ =>
             reportActor ! ShoppingCardDiscarded
             saveStateSnapshot()
         }
-      case Event(GetCurrentCart, data) ⇒
-        stay replying data
-      case Event(StateTimeout, _) ⇒
+      case Event(GetCurrentCart, data) =>
+        stay() replying data
+      case Event(StateTimeout, _) =>
         goto(Inactive) forMax 2.seconds
     }
 
     when(Inactive) {
-      case Event(AddItem(item), _) ⇒
+      case Event(AddItem(item), _) =>
         goto(Shopping) applying ItemAdded(item) forMax 1.second
-      case Event(StateTimeout, _) ⇒
-        stop applying OrderDiscarded andThen (_ ⇒ reportActor ! ShoppingCardDiscarded)
+      case Event(StateTimeout, _) =>
+        stop() applying OrderDiscarded andThen (_ => reportActor ! ShoppingCardDiscarded)
     }
 
     when(Paid) {
-      case Event(Leave, _) ⇒ stop()
-      case Event(GetCurrentCart, data) ⇒
-        stay replying data
+      case Event(Leave, _) => stop()
+      case Event(GetCurrentCart, data) =>
+        stay() replying data
     }
 
     onTransition {
