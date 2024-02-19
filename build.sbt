@@ -1,15 +1,15 @@
 publish / skip := true
 
 val scala212V = "2.12.18"
-val scala213V = "2.13.11"
-val scala3V = "3.3.0"
+val scala213V = "2.13.12"
+val scala3V = "3.3.1"
 
 val scalaV = scala213V
-val pekkoV = "1.0.1"
+val pekkoV = "1.0.2"
 
-val MongoJavaDriverVersion = "4.10.2"
-val Log4jVersion = "2.20.0"
-val NettyVersion = "4.1.94.Final"
+val MongoJavaDriverVersion = "4.11.1"
+val Log4jVersion = "2.22.1"
+val NettyVersion = "4.1.107.Final"
 
 val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
@@ -67,7 +67,7 @@ val commonSettings = Seq(
   crossScalaVersions := Seq(scala212V, scala213V, scala3V),
   libraryDependencies ++= commonDeps,
   dependencyOverrides ++= Seq(
-    "com.typesafe" % "config" % "1.4.2",
+    "com.typesafe" % "config" % "1.4.3",
     "org.slf4j" % "slf4j-api" % "1.7.36",
     "org.apache.pekko" %% "pekko-stream" % pekkoV,
     "org.mongodb" % "mongodb-driver-legacy" % MongoJavaDriverVersion
