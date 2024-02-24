@@ -21,7 +21,7 @@ val commonDeps = Seq(
   "org.apache.pekko"         %% "pekko-actor"               % pekkoV     % "compile",
   "org.mongodb"               % "mongodb-driver-core"       % MongoJavaDriverVersion   % "compile",
   "org.mongodb"               % "mongodb-driver-legacy"     % MongoJavaDriverVersion   % "test",
-  "org.slf4j"                 % "slf4j-api"                 % "1.7.36"  % "test",
+  "org.slf4j"                 % "slf4j-api"                 % "2.0.12"  % "test",
   "org.apache.logging.log4j"  % "log4j-api"                 % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-core"                % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-slf4j-impl"          % Log4jVersion  % "test",
@@ -68,7 +68,7 @@ val commonSettings = Seq(
   libraryDependencies ++= commonDeps,
   dependencyOverrides ++= Seq(
     "com.typesafe" % "config" % "1.4.3",
-    "org.slf4j" % "slf4j-api" % "1.7.36",
+    "org.slf4j" % "slf4j-api" % "2.0.12",
     "org.apache.pekko" %% "pekko-stream" % pekkoV,
     "org.mongodb" % "mongodb-driver-legacy" % MongoJavaDriverVersion
   ),
