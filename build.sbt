@@ -1,6 +1,6 @@
 publish / skip := true
 
-val scala212V = "2.12.18"
+val scala212V = "2.12.19"
 val scala213V = "2.13.13"
 val scala3V = "3.3.1"
 
@@ -8,7 +8,7 @@ val scalaV = scala213V
 val pekkoV = "1.0.2"
 
 val MongoJavaDriverVersion = "4.11.1"
-val Log4jVersion = "2.22.1"
+val Log4jVersion = "2.23.0"
 val NettyVersion = "4.1.107.Final"
 
 val commonDeps = Seq(
@@ -25,7 +25,7 @@ val commonDeps = Seq(
   "org.apache.logging.log4j"  % "log4j-api"                 % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-core"                % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-slf4j-impl"          % Log4jVersion  % "test",
-  "org.scalatest"             %% "scalatest"                % "3.2.16"   % "test",
+  "org.scalatest"             %% "scalatest"                % "3.2.18"   % "test",
   "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
   "org.scalatestplus"         %% "junit-4-13"               % "3.2.18.0" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
