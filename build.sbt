@@ -9,7 +9,7 @@ val pekkoV = "1.0.2"
 
 val MongoJavaDriverVersion = "4.11.2"
 val Log4jVersion = "2.23.0"
-val NettyVersion = "4.1.108.Final"
+val NettyVersion = "4.1.109.Final"
 
 val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
