@@ -8,7 +8,7 @@ val scalaV = scala213V
 val pekkoV = "1.0.2"
 
 val MongoJavaDriverVersion = "4.11.2"
-val Log4jVersion = "2.23.0"
+val Log4jVersion = "2.23.1"
 val NettyVersion = "4.1.111.Final"
 
 val commonDeps = Seq(
