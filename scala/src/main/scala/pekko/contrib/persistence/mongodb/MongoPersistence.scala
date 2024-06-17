@@ -29,6 +29,12 @@ object MongoPersistenceDriver {
 
   case object Acknowledged extends WriteSafety
 
+  case object W1 extends WriteSafety
+
+  case object W2 extends WriteSafety
+
+  case object W3 extends WriteSafety
+
   case object Journaled extends WriteSafety
 
   case object ReplicaAcknowledged extends WriteSafety
@@ -37,6 +43,9 @@ object MongoPersistenceDriver {
     case "errorsignored" => throw new IllegalArgumentException("Errors ignored is no longer supported as a write safety option")
     case "unacknowledged" => Unacknowledged
     case "acknowledged" => Acknowledged
+    case "w1" => W1
+    case "w2" => W2
+    case "w3" => W3
     case "journaled" => Journaled
     case "replicaacknowledged" => ReplicaAcknowledged
   }

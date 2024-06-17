@@ -8,7 +8,7 @@ import org.mongodb.scala.bson.{BsonDocument, BsonString}
 import org.mongodb.scala.model.CountOptions
 import org.mongodb.scala.model.Indexes._
 import org.mongodb.scala.{MongoClientSettings, _}
-import pekko.contrib.persistence.mongodb.MongoPersistenceDriver.{Acknowledged, Journaled, ReplicaAcknowledged, Unacknowledged, WriteSafety}
+import pekko.contrib.persistence.mongodb.MongoPersistenceDriver.{Acknowledged, Journaled, ReplicaAcknowledged, Unacknowledged, W1, W2, W3, WriteSafety}
 import pekko.contrib.persistence.mongodb.{ConfiguredExtension, MongoErrors, MongoPersistenceDriver, MongoPersistenceExtension, MongoPersistenceJournalMetrics, MongoPersistenceJournallingApi}
 
 import java.util.concurrent.TimeUnit
@@ -55,6 +55,9 @@ class ScalaMongoDriver(system: ActorSystem, config: Config) extends MongoPersist
     (writeSafety, wtimeout.toMillis, fsync) match {
       case (Unacknowledged, w, f)      => WriteConcern.UNACKNOWLEDGED.withWTimeout(w, TimeUnit.MILLISECONDS)
       case (Acknowledged, w, f)        => WriteConcern.ACKNOWLEDGED.withWTimeout(w, TimeUnit.MILLISECONDS)
+      case (W1, w, f)                  => WriteConcern.W1.withWTimeout(w, TimeUnit.MILLISECONDS)
+      case (W2, w, f)                  => WriteConcern.W2.withWTimeout(w, TimeUnit.MILLISECONDS)
+      case (W3, w, f)                  => WriteConcern.W3.withWTimeout(w, TimeUnit.MILLISECONDS)
       case (Journaled, w, _)           => WriteConcern.JOURNALED.withWTimeout(w, TimeUnit.MILLISECONDS)
       case (ReplicaAcknowledged, w, f) => WriteConcern.MAJORITY.withWTimeout(w, TimeUnit.MILLISECONDS).withJournal(!f)
     }

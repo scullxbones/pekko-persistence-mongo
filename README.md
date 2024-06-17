@@ -253,12 +253,14 @@ This is well described in the [MongoDB Write Concern Documentation](http://docs.
 
 The write concern can be set both for the journal plugin as well as the snapshot plugin.  Every level of write concern is supported.  The possible concerns are listed below in decreasing safety:
 
-* `ReplicaAcknowledged` - requires a replica to acknowledge the write, this confirms that at least two servers have seen the write
+* `ReplicaAcknowledged` (a.k.a "majority") - requires the majority of the replica to acknowledge the write, this confirms that at least two servers have seen the write
 * `Journaled` <DEFAULT> - requires that the change be journaled on the server that was written to.  Other replicas may not see this write on a network partition
 * `Acknowledged` - also known as "Safe", requires that the MongoDB server acknowledges the write.  This does not require that the change be persistent anywhere but memory.
+  * **Warning**: This setting uses the default write concern configured on the server.
+* `W1` - requires that the MongoDB primary acknowledges the write.  This does not require that the change be persistent anywhere but memory.
+* `W2` - requires that the MongoDB primary and an additional secondary acknowledges the write.  This does not require that the change be persistent anywhere but memory.
+* `W3` - requires that the MongoDB primary and two additional secondaries acknowledges the write.  This does not require that the change be persistent anywhere but memory.
 * `Unacknowledged` - does not require the MongoDB server to acknowledge the write.  It may raise an error in cases of network issues.  This was the default setting that MongoDB caught a lot of flak for, as it masked errors in exchange for straight-line speed.  This is no longer a default in the driver.
-* ~~`ErrorsIgnored` - !WARNING! Extremely unsafe.  This level may not be able to detect if the MongoDB server is even running.  It will also not detect errors such as key collisions.  This makes data loss likely.  In general, don't use this.~~
-* Errors ignored is no longer supported as a write concern.
 
 It is a bad idea&trade; to use anything less safe than `Acknowledged` on the journal.  The snapshots can be played a bit more fast and loose, but the recommendation is not to go below `Acknowledged` for any serious work.
 
