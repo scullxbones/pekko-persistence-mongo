@@ -73,7 +73,7 @@ class ScalaDriverSettings(config: Config) extends OfficialDriverSettings(config)
     )
 
     if (SslEnabled) {
-      bldr.streamFactoryFactory(NettyStreamFactoryFactory())
+      bldr.transportSettings(TransportSettings.nettyBuilder().build())
     } else bldr
 
   }  
