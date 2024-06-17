@@ -7,7 +7,7 @@ val scala3V = "3.4.1"
 val scalaV = scala213V
 val pekkoV = "1.0.2"
 
-val MongoJavaDriverVersion = "4.11.2"
+val MongoJavaDriverVersion = "5.1.1"
 val Log4jVersion = "2.23.1"
 val NettyVersion = "4.1.111.Final"
 
@@ -15,7 +15,7 @@ val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
     .exclude("org.iq80.leveldb", "leveldb")
     .exclude("org.fusesource.leveldbjni", "leveldbjni-all"),
-  ("nl.grons" %% "metrics4-scala" % "4.2.9"),
+  "nl.grons"                 %% "metrics4-scala"            % "4.2.9",
   "org.apache.pekko"         %% "pekko-persistence-query"   % pekkoV     % "compile",
   "org.apache.pekko"         %% "pekko-persistence"         % pekkoV     % "compile",
   "org.apache.pekko"         %% "pekko-actor"               % pekkoV     % "compile",

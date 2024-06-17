@@ -42,7 +42,7 @@ class ScalaMongoDriver(system: ActorSystem, config: Config) extends MongoPersist
   override def ensureCollection(name: String): Future[C] =
     ensureCollection(name, db.createCollection)
 
-  private[this] def ensureCollection(name: String, collectionCreator: String => SingleObservable[Void]): Future[C] =
+  private[this] def ensureCollection(name: String, collectionCreator: String => SingleObservable[Unit]): Future[C] =
     for {
       _ <- collectionCreator(name).toFuture().recover { case MongoErrors.NamespaceExists() => () }
       mongoCollection <- collection(name)
