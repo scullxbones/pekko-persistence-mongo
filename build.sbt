@@ -15,7 +15,7 @@ val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
     .exclude("org.iq80.leveldb", "leveldb")
     .exclude("org.fusesource.leveldbjni", "leveldbjni-all"),
-  "nl.grons"                 %% "metrics4-scala"            % "4.2.9",
+  "nl.grons"                 %% "metrics4-scala"            % "4.3.2",
   "org.apache.pekko"         %% "pekko-persistence-query"   % pekkoV     % "compile",
   "org.apache.pekko"         %% "pekko-persistence"         % pekkoV     % "compile",
   "org.apache.pekko"         %% "pekko-actor"               % pekkoV     % "compile",
