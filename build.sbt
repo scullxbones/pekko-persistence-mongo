@@ -1,7 +1,7 @@
 publish / skip := true
 
 val scala212V = "2.12.20"
-val scala213V = "2.13.14"
+val scala213V = "2.13.15"
 val scala3V = "3.4.3"
 
 val scalaV = scala213V
