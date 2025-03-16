@@ -29,7 +29,7 @@ val commonDeps = Seq(
   "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
   "org.scalatestplus"         %% "junit-4-13"               % "3.2.19.0" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
-  "org.mockito"               % "mockito-core"              % "5.14.2" % "test",
+  "org.mockito"               % "mockito-core"              % "5.16.1" % "test",
   "org.apache.pekko"         %% "pekko-slf4j"               % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-testkit"             % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-persistence-tck"     % pekkoV     % "test",
