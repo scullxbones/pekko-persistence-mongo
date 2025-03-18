@@ -18,25 +18,25 @@ jobs:
           - mongo-version: 4.4
             scala-version: 2.12.20
           - mongo-version: 4.4
-            scala-version: 2.13.15
+            scala-version: 2.13.16
           - mongo-version: 4.4
             scala-version: 3.5.1
           - mongo-version: "5.0" # 5.0 must be quoted, otherwise will be truncated to 5
             scala-version: 2.12.20
           - mongo-version: "5.0"
-            scala-version: 2.13.15
+            scala-version: 2.13.16
           - mongo-version: "5.0"
             scala-version: 3.5.1
           - mongo-version: "6.0"
             scala-version: 2.12.20
           - mongo-version: "6.0"
-            scala-version: 2.13.15
+            scala-version: 2.13.16
           - mongo-version: "6.0"
             scala-version: 3.5.1
           - mongo-version: "7.0"
             scala-version: 2.12.20
           - mongo-version: "7.0"
-            scala-version: 2.13.15
+            scala-version: 2.13.16
           - mongo-version: "7.0"
             scala-version: 3.5.1
     env:
@@ -51,11 +51,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Setup JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17
