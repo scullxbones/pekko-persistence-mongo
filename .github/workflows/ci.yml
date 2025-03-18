@@ -73,6 +73,8 @@ jobs:
           -e MONGO_INITDB_ROOT_PASSWORD=password \
           docker.io/mongo:${{matrix.mongo-version}} $MONGODB_OPTS
         sudo docker ps -a
+    - name: Setup sbt launcher
+      uses: sbt/setup-sbt@v1
     - name: Build and test
       shell: bash
       run: |
