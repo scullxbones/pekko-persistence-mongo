@@ -8,7 +8,7 @@ val scalaV = scala213V
 val pekkoV = "1.1.3"
 
 val MongoJavaDriverVersion = "5.2.1"
-val NettyVersion = "4.1.114.Final"
+val NettyVersion = "4.1.119.Final"
 val Log4jVersion = "2.24.3"
 
 val commonDeps = Seq(
@@ -21,15 +21,15 @@ val commonDeps = Seq(
   "org.apache.pekko"         %% "pekko-actor"               % pekkoV     % "compile",
   "org.mongodb"               % "mongodb-driver-core"       % MongoJavaDriverVersion   % "compile",
   "org.mongodb"               % "mongodb-driver-legacy"     % MongoJavaDriverVersion   % "test",
-  "org.slf4j"                 % "slf4j-api"                 % "2.0.16"  % "test",
+  "org.slf4j"                 % "slf4j-api"                 % "2.0.17"  % "test",
   "org.apache.logging.log4j"  % "log4j-api"                 % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-core"                % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-slf4j-impl"          % Log4jVersion  % "test",
   "org.scalatest"             %% "scalatest"                % "3.2.19"   % "test",
   "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
-  "org.scalatestplus"         %% "junit-4-13"               % "3.2.19.0" % "test",
+  "org.scalatestplus"         %% "junit-4-13"               % "3.2.19.1" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
-  "org.mockito"               % "mockito-core"              % "5.14.2" % "test",
+  "org.mockito"               % "mockito-core"              % "5.16.1" % "test",
   "org.apache.pekko"         %% "pekko-slf4j"               % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-testkit"             % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-persistence-tck"     % pekkoV     % "test",
@@ -68,7 +68,7 @@ val commonSettings = Seq(
   libraryDependencies ++= commonDeps,
   dependencyOverrides ++= Seq(
     "com.typesafe" % "config" % "1.4.3",
-    "org.slf4j" % "slf4j-api" % "2.0.16",
+    "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.apache.pekko" %% "pekko-stream" % pekkoV,
     "org.mongodb" % "mongodb-driver-legacy" % MongoJavaDriverVersion
   ),
