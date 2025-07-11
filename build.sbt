@@ -67,7 +67,7 @@ val commonSettings = Seq(
   crossScalaVersions := Seq(scala212V, scala213V, scala3V),
   libraryDependencies ++= commonDeps,
   dependencyOverrides ++= Seq(
-    "com.typesafe" % "config" % "1.4.3",
+    "com.typesafe" % "config" % "1.4.4",
     "org.slf4j" % "slf4j-api" % "2.0.17",
     "org.apache.pekko" %% "pekko-stream" % pekkoV,
     "org.mongodb" % "mongodb-driver-legacy" % MongoJavaDriverVersion
