@@ -8,8 +8,8 @@ val scalaV = scala213V
 val pekkoV = "1.1.5"
 
 val MongoJavaDriverVersion = "5.5.1"
-val NettyVersion = "4.1.124.Final"
-val Log4jVersion = "2.24.3"
+val NettyVersion = "4.2.4.Final"
+val Log4jVersion = "2.25.1"
 
 val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
@@ -29,7 +29,7 @@ val commonDeps = Seq(
   "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
   "org.scalatestplus"         %% "junit-4-13"               % "3.2.19.1" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
-  "org.mockito"               % "mockito-core"              % "5.16.1" % "test",
+  "org.mockito"               % "mockito-core"              % "5.19.0" % "test",
   "org.apache.pekko"         %% "pekko-slf4j"               % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-testkit"             % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-persistence-tck"     % pekkoV     % "test",
@@ -44,6 +44,7 @@ ThisBuild / versionScheme := Some("semver-spec")
 
 import xerial.sbt.Sonatype._
 
+ThisBuild / sonatypeCredentialHost := sonatypeCentralHost
 ThisBuild / sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "pekko-persistence-mongo", "scullduggery@gmail.com"))
 ThisBuild / licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / developers := List(
