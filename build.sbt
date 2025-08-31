@@ -44,6 +44,7 @@ ThisBuild / versionScheme := Some("semver-spec")
 
 import xerial.sbt.Sonatype._
 
+ThisBuild / sonatypeCredentialHost := sonatypeCentralHost
 ThisBuild / sonatypeProjectHosting := Some(GitHubHosting("scullxbones", "pekko-persistence-mongo", "scullduggery@gmail.com"))
 ThisBuild / licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / developers := List(
