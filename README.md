@@ -9,7 +9,7 @@
 ## A MongoDB plugin for [pekko-persistence](https://pekko.apache.org/docs/pekko/current/typed/index-persistence.html)
 
 * The tests expect two mongods running, with and without authentication. A utility script (`test_containers.sh`) will boot these as docker containers.
-* Supports Pekko 1.0.x
+* Supports Pekko 1.2.x
 * Test suite runs against MongoDB major versions 4.4, 5.0, 6.0, 7.0, 8.0
 * Cross-compiled against scala `2.12`, `2.13` and `3` - *WARNING* in the case of Scala 3 this library uses `2.13` version of `mongo-scala-driver`, because it is not yet available for Scala 3.
 * Be aware that there is a `16MB` payload size limit on snapshots and journal events.  In addition a journal batch must be <= `16MB` in size.  A journal batch is defined by the `Seq` of events passed to `persistAll`.
@@ -20,7 +20,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.2.2"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.3.0"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
