@@ -7,7 +7,7 @@ val scala3V = "3.7.2"
 val scalaV = scala213V
 val pekkoV = "1.2.0"
 
-val MongoJavaDriverVersion = "5.5.1"
+val MongoJavaDriverVersion = "5.6.0"
 val NettyVersion = "4.2.4.Final"
 val Log4jVersion = "2.25.1"
 
