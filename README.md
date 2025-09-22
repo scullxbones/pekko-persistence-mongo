@@ -20,7 +20,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.3.0"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.3.1"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
@@ -54,7 +54,7 @@ pekko.persistence.snapshot-store.plugin = "pekko-contrib-mongodb-persistence-sna
 
 #### Apache Pekko support
 
-* The aim of this fork of the `akka-persistence-mongo` library is to provide a MongoDB persistence plugin for Apache Pekko 1.0.0
+* The aim of this fork of the `akka-persistence-mongo` library is to provide a MongoDB persistence plugin for Apache Pekko
 
 <a name="akka-pekko-migration"/>
 
