@@ -18,13 +18,13 @@ jobs:
           - mongo-version: 4.4
             scala-version: 2.12.20
           - mongo-version: 4.4
-            scala-version: 2.13.16
+            scala-version: 2.13.18
           - mongo-version: "5.0"
-            scala-version: 2.13.16
+            scala-version: 2.13.18
           - mongo-version: "6.0"
-            scala-version: 2.13.16
+            scala-version: 2.13.18
           - mongo-version: "7.0"
-            scala-version: 2.13.16
+            scala-version: 2.13.18
           - mongo-version: "7.0"
             scala-version: 3.7.3
           - mongo-version: "8.0"
