@@ -111,5 +111,91 @@ class RemoveDuplicatedEventsByPersistenceIdSpec extends BaseUnitTest with ScalaF
     processedEvents should contain theSameElementsInOrderAs expectedEvents
   }
 
+  it should "filter duplicates within bounded capacity" in {
+
+    val events = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-1", 2L, StringPayload("foo", Set())),
+      Event("pid-1", 2L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set()))
+    )
+
+    val expectedEvents = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-1", 2L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set()))
+    )
+
+    val processedEvents = Source(events).via(new RemoveDuplicatedEventsByPersistenceId(10)).runFold(Vector.empty[Event])(_ :+ _).futureValue
+
+    processedEvents should contain theSameElementsInOrderAs expectedEvents
+  }
+
+  it should "allow duplicates for evicted entries when bounded" in {
+
+    // With maxSize=2, after seeing pid-1, pid-2, pid-3, pid-1 gets evicted
+    val events = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set())),
+      Event("pid-3", 1L, StringPayload("foo", Set())),
+      Event("pid-1", 1L, StringPayload("foo", Set())) // duplicate, but pid-1 was evicted
+    )
+
+    val expectedEvents = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set())),
+      Event("pid-3", 1L, StringPayload("foo", Set())),
+      Event("pid-1", 1L, StringPayload("foo", Set())) // passes through because evicted
+    )
+
+    val processedEvents = Source(events).via(new RemoveDuplicatedEventsByPersistenceId(2)).runFold(Vector.empty[Event])(_ :+ _).futureValue
+
+    processedEvents should contain theSameElementsInOrderAs expectedEvents
+  }
+
+  it should "preserve legacy unbounded behavior with maxSize 0" in {
+
+    val events = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set())),
+      Event("pid-3", 1L, StringPayload("foo", Set())),
+      Event("pid-1", 1L, StringPayload("foo", Set())), // duplicate — filtered even though 3 pids seen
+      Event("pid-2", 2L, StringPayload("foo", Set()))
+    )
+
+    val expectedEvents = List(
+      Event("pid-1", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 1L, StringPayload("foo", Set())),
+      Event("pid-3", 1L, StringPayload("foo", Set())),
+      Event("pid-2", 2L, StringPayload("foo", Set()))
+    )
+
+    val processedEvents = Source(events).via(new RemoveDuplicatedEventsByPersistenceId(0)).runFold(Vector.empty[Event])(_ :+ _).futureValue
+
+    processedEvents should contain theSameElementsInOrderAs expectedEvents
+  }
+
+  "RemoveDuplicates" should "re-emit values after eviction when bounded" in {
+
+    val elements = List("a", "b", "c", "a") // "a" evicted after "c" with maxSize=2
+
+    val expectedElements = List("a", "b", "c", "a") // re-emitted
+
+    val processedElements = Source(elements).via(new RemoveDuplicates[String](2)).runFold(Vector.empty[String])(_ :+ _).futureValue
+
+    processedElements should contain theSameElementsInOrderAs expectedElements
+  }
+
+  it should "filter duplicates within capacity" in {
+
+    val elements = List("a", "b", "a", "b") // both still in cache with maxSize=2
+
+    val expectedElements = List("a", "b")
+
+    val processedElements = Source(elements).via(new RemoveDuplicates[String](2)).runFold(Vector.empty[String])(_ :+ _).futureValue
+
+    processedElements should contain theSameElementsInOrderAs expectedElements
+  }
 
 }

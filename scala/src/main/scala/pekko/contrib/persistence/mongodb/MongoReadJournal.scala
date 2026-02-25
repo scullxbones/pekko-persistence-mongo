@@ -12,7 +12,6 @@ import org.apache.pekko.stream.scaladsl._
 import org.apache.pekko.stream.stage._
 import org.apache.pekko.stream.{javadsl => _, scaladsl => _, _}
 
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext
 
 object MongoReadJournal {
@@ -24,10 +23,11 @@ class MongoReadJournal(system: ExtendedActorSystem, config: Config)
 
   private[this] val impl = MongoPersistenceExtension(system)(config).readJournal
   private[this] implicit val materializer: Materializer = Materializer(system)
+  private[this] val dedupMaxSize = MongoSettings(system.settings).ReadJournalDedupMaxSize
 
-  override def scaladslReadJournal(): scaladsl.ReadJournal = new ScalaDslMongoReadJournal(impl)
+  override def scaladslReadJournal(): scaladsl.ReadJournal = new ScalaDslMongoReadJournal(impl, dedupMaxSize)
 
-  override def javadslReadJournal(): javadsl.ReadJournal = new JavaDslMongoReadJournal(new ScalaDslMongoReadJournal(impl))
+  override def javadslReadJournal(): javadsl.ReadJournal = new JavaDslMongoReadJournal(new ScalaDslMongoReadJournal(impl, dedupMaxSize))
 }
 
 object ScalaDslMongoReadJournal {
@@ -50,7 +50,7 @@ object ScalaDslMongoReadJournal {
 
 }
 
-class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi)(implicit m: Materializer, ec: ExecutionContext)
+class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi, dedupMaxSize: Int = 0)(implicit m: Materializer, ec: ExecutionContext)
   extends scaladsl.ReadJournal
     with CurrentPersistenceIdsQuery
     with CurrentEventsByPersistenceIdQuery
@@ -82,7 +82,7 @@ class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi)(implici
     //      Source.actorRef[(Event, Offset)](streamBufferSizeMaxConfig.getInt("all-events"), OverflowStrategy.dropTail)
     //            .mapMaterializedValue(impl.subscribeJournalEvents)
     //            .map{ case(e,_) => e }
-    (pastSource ++ realtimeSource).via(new RemoveDuplicatedEventsByPersistenceId).toEventEnvelopes
+    (pastSource ++ realtimeSource).via(new RemoveDuplicatedEventsByPersistenceId(dedupMaxSize)).toEventEnvelopes
   }
 
   override def eventsByPersistenceId(persistenceId: String, fromSequenceNr: Long, toSequenceNr: Long): Source[EventEnvelope, NotUsed] = {
@@ -103,7 +103,7 @@ class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi)(implici
       .filter(_.pid == persistenceId)
       .filter(_.sn >= fromSequenceNr)
       .via(new StopAtSeq(toSequenceNr))
-      .via(new RemoveDuplicatedEventsByPersistenceId)
+      .via(new RemoveDuplicatedEventsByPersistenceId(dedupMaxSize))
 
     val liveSource = pastSource.concat(realtimeSource)
 
@@ -115,7 +115,7 @@ class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi)(implici
 
     val pastSource = impl.currentPersistenceIds
     val realtimeSource = impl.livePersistenceIds
-    (pastSource ++ realtimeSource).via(new RemoveDuplicates)
+    (pastSource ++ realtimeSource).via(new RemoveDuplicates(dedupMaxSize))
   }
 
   override def eventsByTag(tag: String, offset: Offset): Source[EventEnvelope, NotUsed] = {
@@ -127,7 +127,7 @@ class ScalaDslMongoReadJournal(impl: MongoPersistenceReadJournallingApi)(implici
     val realtimeSource =
       impl.liveEventsByTag(tag, offset)
         .toEventEnvelopes
-    (pastSource ++ realtimeSource).via(new RemoveDuplicatedEventEnvelopes)
+    (pastSource ++ realtimeSource).via(new RemoveDuplicatedEventEnvelopes(dedupMaxSize))
   }
 }
 
@@ -185,8 +185,19 @@ class StopAtSeq(to: Long) extends GraphStage[FlowShape[Event, Event]] {
   }
 }
 
+private[mongodb] class BoundedLruMap[K, V](maxSize: Int) {
+  private val unbounded = maxSize <= 0
+  private val underlying = new java.util.LinkedHashMap[K, V](16, 0.75f, true) {
+    override def removeEldestEntry(eldest: java.util.Map.Entry[K, V]): Boolean =
+      !unbounded && size() > maxSize
+  }
+  def get(key: K): Option[V] = Option(underlying.get(key))
+  def put(key: K, value: V): Unit = { underlying.put(key, value); () }
+  def contains(key: K): Boolean = underlying.containsKey(key)
+}
+
 // TODO: can cause lost events if upstream is out of sequence
-class RemoveDuplicatedEventsByPersistenceId extends GraphStage[FlowShape[Event, Event]] {
+class RemoveDuplicatedEventsByPersistenceId(dedupMaxSize: Int = 0) extends GraphStage[FlowShape[Event, Event]] {
 
   private val in: Inlet[Event] = Inlet("in")
   private val out: Outlet[Event] = Outlet("out")
@@ -195,17 +206,17 @@ class RemoveDuplicatedEventsByPersistenceId extends GraphStage[FlowShape[Event, 
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with InHandler with OutHandler {
 
-    private val lastSequenceNrByPersistenceId = mutable.HashMap.empty[String, Long]
+    private val lastSequenceNrByPersistenceId = new BoundedLruMap[String, Long](dedupMaxSize)
 
     override def onPush(): Unit = {
       val event = grab(in)
       lastSequenceNrByPersistenceId.get(event.pid) match {
         case Some(sn) if event.sn > sn =>
           push(out, event)
-          lastSequenceNrByPersistenceId.update(event.pid, event.sn)
+          lastSequenceNrByPersistenceId.put(event.pid, event.sn)
         case None =>
           push(out, event)
-          lastSequenceNrByPersistenceId.update(event.pid, event.sn)
+          lastSequenceNrByPersistenceId.put(event.pid, event.sn)
         case Some(_) =>
           pull(in)
       }
@@ -219,7 +230,7 @@ class RemoveDuplicatedEventsByPersistenceId extends GraphStage[FlowShape[Event, 
 }
 
 // TODO: can cause lost events if upstream is out of sequence
-class RemoveDuplicatedEventEnvelopes extends GraphStage[FlowShape[EventEnvelope, EventEnvelope]] {
+class RemoveDuplicatedEventEnvelopes(dedupMaxSize: Int = 0) extends GraphStage[FlowShape[EventEnvelope, EventEnvelope]] {
   private val in: Inlet[EventEnvelope] = Inlet("in")
   private val out: Outlet[EventEnvelope] = Outlet("out")
 
@@ -227,17 +238,17 @@ class RemoveDuplicatedEventEnvelopes extends GraphStage[FlowShape[EventEnvelope,
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with InHandler with OutHandler {
 
-    private val lastSequenceNrByPersistenceId = mutable.HashMap.empty[String, Long]
+    private val lastSequenceNrByPersistenceId = new BoundedLruMap[String, Long](dedupMaxSize)
 
     override def onPush(): Unit = {
       val event = grab(in)
       lastSequenceNrByPersistenceId.get(event.persistenceId) match {
         case Some(sn) if event.sequenceNr > sn =>
           push(out, event)
-          lastSequenceNrByPersistenceId.update(event.persistenceId, event.sequenceNr)
+          lastSequenceNrByPersistenceId.put(event.persistenceId, event.sequenceNr)
         case None =>
           push(out, event)
-          lastSequenceNrByPersistenceId.update(event.persistenceId, event.sequenceNr)
+          lastSequenceNrByPersistenceId.put(event.persistenceId, event.sequenceNr)
         case Some(_) =>
           pull(in)
       }
@@ -250,7 +261,7 @@ class RemoveDuplicatedEventEnvelopes extends GraphStage[FlowShape[EventEnvelope,
 
 }
 
-class RemoveDuplicates[T] extends GraphStage[FlowShape[T, T]] {
+class RemoveDuplicates[T](dedupMaxSize: Int = 0) extends GraphStage[FlowShape[T, T]] {
 
   private val in: Inlet[T] = Inlet("in")
   private val out: Outlet[T] = Outlet("out")
@@ -259,14 +270,14 @@ class RemoveDuplicates[T] extends GraphStage[FlowShape[T, T]] {
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with InHandler with OutHandler {
 
-    private var processed = Set.empty[T]
+    private val processed = new BoundedLruMap[T, Unit](dedupMaxSize)
 
     override def onPush(): Unit = {
       val element = grab(in)
       if (processed.contains(element)) {
         pull(in)
       } else {
-        processed += element
+        processed.put(element, ())
         push(out, element)
       }
     }
