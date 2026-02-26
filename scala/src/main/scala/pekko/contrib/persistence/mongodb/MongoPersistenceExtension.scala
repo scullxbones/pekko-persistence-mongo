@@ -127,4 +127,6 @@ class MongoSettings(val config: Config) {
   val MongoMetricsBuilderClass: String = config.getString("metrics-builder.class")
 
   val CollectionCache: Config = config.getConfig("collection-cache")
+
+  val ReadJournalDedupMaxSize: Int = config.getInt("read-journal-dedup-max-size")
 }
