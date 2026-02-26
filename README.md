@@ -20,7 +20,7 @@
 * Add the following to sbt:
 
 ```scala
-libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.3.1"
+libraryDependencies +="com.github.scullxbones" %% "pekko-persistence-mongodb" % "1.4.0"
 ```
 * Inside your `application.conf` file, add the following line if you want to use the journal (snapshot is optional).  
   The driver selection should be pulled in by a `reference.conf` in the driver jar you choose:
