@@ -5,11 +5,11 @@ val scala213V = "2.13.18"
 val scala3V = "3.7.4"
 
 val scalaV = scala213V
-val pekkoV = "1.4.0"
+val pekkoV = "1.5.0"
 
-val MongoJavaDriverVersion = "5.6.4"
+val MongoJavaDriverVersion = "5.6.5"
 val NettyVersion = "4.2.12.Final"
-val Log4jVersion = "2.25.3"
+val Log4jVersion = "2.25.4"
 
 val commonDeps = Seq(
   ("org.apache.pekko"  %% "pekko-persistence" % pekkoV)
@@ -25,11 +25,11 @@ val commonDeps = Seq(
   "org.apache.logging.log4j"  % "log4j-api"                 % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-core"                % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-slf4j-impl"          % Log4jVersion  % "test",
-  "org.scalatest"             %% "scalatest"                % "3.2.19"   % "test",
+  "org.scalatest"             %% "scalatest"                % "3.2.20"   % "test",
   "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
-  "org.scalatestplus"         %% "junit-4-13"               % "3.2.19.1" % "test",
+  "org.scalatestplus"         %% "junit-4-13"               % "3.2.20.0" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
-  "org.mockito"               % "mockito-core"              % "5.21.0" % "test",
+  "org.mockito"               % "mockito-core"              % "5.23.0" % "test",
   "org.apache.pekko"         %% "pekko-slf4j"               % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-testkit"             % pekkoV     % "test",
   "org.apache.pekko"         %% "pekko-persistence-tck"     % pekkoV     % "test",
