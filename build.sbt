@@ -7,7 +7,7 @@ val scala3V = "3.8.3"
 val scalaV = scala213V
 val pekkoV = "1.6.0"
 
-val MongoJavaDriverVersion = "5.6.5"
+val MongoJavaDriverVersion = "5.7.0"
 val NettyVersion = "4.2.12.Final"
 val Log4jVersion = "2.25.4"
 
@@ -109,8 +109,8 @@ lazy val `pekko-persistence-mongodb` = (project in file("scala"))
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile" cross CrossVersion.for3Use2_13,
-      "org.mongodb.scala" %% "mongo-scala-bson"   % MongoJavaDriverVersion % "compile" cross CrossVersion.for3Use2_13,
+      "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile",
+      "org.mongodb.scala" %% "mongo-scala-bson"   % MongoJavaDriverVersion % "compile",
       "io.netty"          % "netty-buffer"        % NettyVersion           % "compile",
       "io.netty"          % "netty-transport"     % NettyVersion           % "compile",
       "io.netty"          % "netty-handler"       % NettyVersion           % "compile",
@@ -126,7 +126,7 @@ lazy val `pekko-persistence-mongo-tools` = (project in file("tools"))
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile" cross CrossVersion.for3Use2_13
+      "org.mongodb.scala" %% "mongo-scala-driver" % MongoJavaDriverVersion % "compile"
     ),
     publish / skip := true
   )
