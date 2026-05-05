@@ -75,7 +75,7 @@ class ScalaDriverPersistenceAuthSpec extends BaseUnitTest with ContainerMongo wi
 
   "A secured mongodb instance" should "be connectable via user and pass" in withConfig(authConfig,"pekko-contrib-mongodb-persistence-journal","authentication-config") { case (actorSystem, config) =>
     val underTest = new ScalaMongoDriver(actorSystem, config)
-    val collections = Await.result(underTest.db.listCollectionNames().toFuture,3.seconds)
+    val collections = Await.result(underTest.db.listCollectionNames().toFuture(), 3.seconds)
     collections should contain ("system.users")
     ()
   }
