@@ -182,7 +182,7 @@ pekko.contrib.persistence.mongodb.mongo.snaps-collection = "my_persistent_snapsh
 pekko.contrib.persistence.mongodb.mongo.snaps-index = "my_snaps_index"
 pekko.contrib.persistence.mongodb.mongo.metadata-collection = "my_metadata_collection"
 pekko.contrib.persistence.mongodb.mongo.metadata-index = "my_metadata_index"
-pekko.contrib.persistence.mongodb.mongo.journal-write-concern = "Acknowledged"
+pekko.contrib.persistence.mongodb.mongo.journal-write-concern = "W1"
 ```
 
 <a name="collectioncaches"/>
@@ -254,9 +254,10 @@ This is well described in the [MongoDB Write Concern Documentation](http://docs.
 The write concern can be set both for the journal plugin as well as the snapshot plugin.  Every level of write concern is supported.  The possible concerns are listed below in decreasing safety:
 
 * `ReplicaAcknowledged` (a.k.a "majority") - requires the majority of the replica to acknowledge the write, this confirms that at least two servers have seen the write
-* `Journaled` <DEFAULT> - requires that the change be journaled on the server that was written to.  Other replicas may not see this write on a network partition
+* `Journaled` <DEFAULT> - requires that the change be journaled on the server that was written to.  Other replicas may not see this write on a network partition.
+  * **Warning**: This setting maps to `WriteConcern.JOURNALED`, which sends `{j: true}` on the wire without an explicit `w` value, so the MongoDB server applies its effective default for `w`. On a MongoDB 5.0+ replica set the implicit default is `w: majority`, and any cluster with `setDefaultRWConcern` configured will likewise override `w`. To pin the client-side write concern to "primary only", configure `W1` explicitly (note: `W1` does not include journaling — combine with care depending on your durability requirements).
 * `Acknowledged` - also known as "Safe", requires that the MongoDB server acknowledges the write.  This does not require that the change be persistent anywhere but memory.
-  * **Warning**: This setting uses the default write concern configured on the server.
+  * **Warning**: This setting maps to `WriteConcern.ACKNOWLEDGED`, which sends no explicit `w` value on the wire, so the MongoDB server applies its effective default. On a MongoDB 5.0+ replica set the implicit default is `w: majority`, and any cluster with `setDefaultRWConcern` configured will likewise override `w`. Use `W1` if you need a guaranteed client-side `w: 1` regardless of server defaults.
 * `W1` - requires that the MongoDB primary acknowledges the write.  This does not require that the change be persistent anywhere but memory.
 * `W2` - requires that the MongoDB primary and an additional secondary acknowledges the write.  This does not require that the change be persistent anywhere but memory.
 * `W3` - requires that the MongoDB primary and two additional secondaries acknowledges the write.  This does not require that the change be persistent anywhere but memory.
