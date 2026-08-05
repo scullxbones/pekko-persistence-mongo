@@ -26,7 +26,7 @@ val commonDeps = Seq(
   "org.apache.logging.log4j"  % "log4j-core"                % Log4jVersion  % "test",
   "org.apache.logging.log4j"  % "log4j-slf4j-impl"          % Log4jVersion  % "test",
   "org.scalatest"             %% "scalatest"                % "3.2.20"   % "test",
-  "org.scalatestplus"         %% "mockito-5-10"             % "3.2.18.0" % "test",
+  "org.scalatestplus"         %% "mockito-5-12"             % "3.2.19.0" % "test",
   "org.scalatestplus"         %% "junit-4-13"               % "3.2.20.0" % "test",
   "junit"                     % "junit"                     % "4.13.2"    % "test",
   "org.mockito"               % "mockito-core"              % "5.23.0" % "test",
